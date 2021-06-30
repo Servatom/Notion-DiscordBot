@@ -13,6 +13,7 @@ requests = "*"
 soupsieve = "*"
 urllib3 = "*"
 discord = "*"
+validators = "*"
 
 [dev-packages]
 
