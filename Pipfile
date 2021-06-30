@@ -12,6 +12,7 @@ idna = "*"
 requests = "*"
 soupsieve = "*"
 urllib3 = "*"
+discord = "*"
 
 [dev-packages]
 
