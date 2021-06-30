@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  notiondiscordbot:
+    image: notiondiscordbot
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./Bot:/Bot
+    environment: 
+      - DATABASE_TOKEN=your-notion-database-token
+      - AUTH_KEY=your-notion-integration-key
+      - DISCORD_AUTH=your-discord-bot-token
