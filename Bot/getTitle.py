@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def giveTitle(given_url):
-    url  = given_url
+    url = given_url
 
     try:
         request = requests.get(url)
