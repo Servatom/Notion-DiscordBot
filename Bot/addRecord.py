@@ -6,18 +6,14 @@ url = "https://api.notion.com/v1/pages"
 database = os.environ["DATABASE_TOKEN"]
 
 
-def addData(url, contributor, tag="misc"):
+def addData(url, contributor, tag=[{"name": "misc", "color": "default"}]):
     data_to_be_written = {
         "parent": {
             "database_id": database
         },
         "properties": {
             "Tag": {
-                "multi_select": [
-                    {
-                        "name": tag
-                    }
-                ]
+                "multi_select": tag
             },
             "Title": {
                 "rich_text": [
