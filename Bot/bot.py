@@ -21,10 +21,15 @@ async def add(ctx, *args):
                 #The link doesnt exist in the database
                 if(len(args) > 1):
                     #Tag provided
-                    tag = args[1]
+                    final_tag = ""
 
+                    #Multiple tags
+                    for tag in args[1:]:
+                        final_tag = final_tag + tag + ","
+                    final_tag = final_tag.rstrip(",")
+                    
                     #Add data
-                    addData(url, author, tag)
+                    addData(url, author, final_tag)
                 else:
                     #Tag not provided
                     addData(url, author)
