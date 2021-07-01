@@ -21,13 +21,19 @@ async def add(ctx, *args):
                 #The link doesnt exist in the database
                 if(len(args) > 1):
                     #Tag provided
-                    final_tag = ""
-
-                    #Multiple tags
+                    final_tag = []
+                    list_of_tags = []
+                    #Multiple
                     for tag in args[1:]:
-                        final_tag = final_tag + tag + ","
-                    final_tag = final_tag.rstrip(",")
-                    
+                        list_of_tags.append(tag)
+                    for tag in list_of_tags:
+                        tag_list = tag.split(",")
+                        for single_tag in tag_list:
+                            if(single_tag.strip() == ""):
+                                continue
+                            final_tag.append({"name": single_tag.strip(), "color": "default"})
+
+                    print(final_tag)               
                     #Add data
                     addData(url, author, final_tag)
                 else:
