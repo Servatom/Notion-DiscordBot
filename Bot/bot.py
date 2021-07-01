@@ -3,7 +3,7 @@ from discord.ext import commands
 import os
 from addRecord import addData
 import validators
-
+from duplicateCheck import doesItExist
 prefix = "/"
 bot = commands.Bot(command_prefix=prefix)
 
@@ -16,16 +16,29 @@ async def add(ctx, *args):
     if(len(args) > 0):
         url = args[0]
         if(validators.url(url)):
-            if(len(args) > 1):
-                tag = args[1]
-                addData(url, author, tag)
-            else:
-                addData(url, author)
+            #Its a valid link
+            if(doesItExist(url) == False):
+                #The link doesnt exist in the database
+                if(len(args) > 1):
+                    #Tag provided
+                    tag = args[1]
 
-            embed = discord.Embed(title="Data added", description="New link added by {}".format(
-                author), color=discord.Color.from_rgb(190, 174, 226))
-            await ctx.send(embed=embed)
+                    #Add data
+                    addData(url, author, tag)
+                else:
+                    #Tag not provided
+                    addData(url, author)
+
+                #Send confirmation that data was pushed
+                embed = discord.Embed(title="Data added", description="New link added by {}".format(author), color=discord.Color.from_rgb(190, 174, 226))
+                await ctx.send(embed=embed)
+            else:
+                #the link was already in the database
+                #Preventing duplication of data
+                embed = discord.Embed(title="Already Added", description="This link is already in the refrences page", color=discord.Color.red())
+                await ctx.send(embed=embed)
         else:
+            #Invalid URL provided
             embed = discord.Embed(title="Invalid URL provided",
                                   description="Please check the URL you have provided", color=discord.Color.red())
             await ctx.send(embed=embed)
