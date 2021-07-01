@@ -13,11 +13,9 @@ def addData(url, contributor, tag="misc"):
         },
         "properties": {
             "Tag": {
-                "rich_text": [
+                "multi_select": [
                     {
-                        "text": {
-                            "content": tag,
-                        }
+                        "name": tag
                     }
                 ]
             },
