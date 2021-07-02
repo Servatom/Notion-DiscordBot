@@ -11,4 +11,4 @@ def giveTitle(given_url):
         title_tag = soup.find('title')
         return title_tag.get_text()
     except:
-        return url.split("/")[-1]
+        return url.split("/")[-1].split(".")[0]
