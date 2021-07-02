@@ -23,19 +23,27 @@ async def add(ctx, *args):
                     #Tag provided
                     final_tag = []
                     list_of_tags = []
+                    
                     #Multiple
                     for tag in args[1:]:
+                        #Adding the arguments to list_of_tags
                         list_of_tags.append(tag)
+                    
                     for tag in list_of_tags:
+                        #Splitting the arguments to get the tags
                         tag_list = tag.split(",")
                         for single_tag in tag_list:
                             if(single_tag.strip() == ""):
                                 continue
+                            #Appending tag to the final_tag dict
                             final_tag.append({"name": single_tag.strip(), "color": "default"})
+
+                    #For pdf files PDF tag
                     if(".pdf" in url):
                         final_tag.append({"name": "PDF", "color": "default"})
 
                     print(final_tag)               
+                    
                     #Add data
                     addData(url, author, final_tag)
                 else:
@@ -45,6 +53,7 @@ async def add(ctx, *args):
                 #Send confirmation that data was pushed
                 embed = discord.Embed(title="Data added", description="New link added by {}".format(author), color=discord.Color.from_rgb(190, 174, 226))
                 await ctx.send(embed=embed)
+
             else:
                 #the link was already in the database
                 #Preventing duplication of data
