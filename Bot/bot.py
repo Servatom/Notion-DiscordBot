@@ -32,6 +32,8 @@ async def add(ctx, *args):
                             if(single_tag.strip() == ""):
                                 continue
                             final_tag.append({"name": single_tag.strip(), "color": "default"})
+                    if(".pdf" in url):
+                        final_tag.append({"name": "PDF", "color": "default"})
 
                     print(final_tag)               
                     #Add data
