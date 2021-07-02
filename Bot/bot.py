@@ -4,6 +4,7 @@ import os
 from addRecord import addData
 import validators
 from duplicateCheck import doesItExist
+from tagGiver import giveTags
 prefix = "/"
 bot = commands.Bot(command_prefix=prefix)
 
@@ -19,33 +20,9 @@ async def add(ctx, *args):
             #Its a valid link
             if(doesItExist(url) == False):
                 #The link doesnt exist in the database
-                if(len(args) > 1):
-                    #Tag provided
-                    final_tag = []
-                    list_of_tags = []
-                    
-                    #Multiple
-                    for tag in args[1:]:
-                        #Adding the arguments to list_of_tags
-                        list_of_tags.append(tag)
-                    
-                    for tag in list_of_tags:
-                        #Splitting the arguments to get the tags
-                        tag_list = tag.split(",")
-                        for single_tag in tag_list:
-                            if(single_tag.strip() == ""):
-                                continue
-                            #Appending tag to the final_tag dict
-                            final_tag.append({"name": single_tag.strip(), "color": "default"})
-
-                    #For pdf files PDF tag
-                    if(".pdf" in url):
-                        final_tag.append({"name": "PDF", "color": "default"})
-
-                    print(final_tag)               
-                    
+                if(len(args) > 1):             
                     #Add data
-                    addData(url, author, final_tag)
+                    addData(url, author, giveTags(args))
                 else:
                     #Tag not provided
                     addData(url, author)
@@ -70,6 +47,8 @@ async def add(ctx, *args):
         await ctx.send(embed=embed)
 
 
+
+#Getting discord token and running the bot
 try:
     print(os.environ['DISCORD_AUTH'])
     token = str(os.environ['DISCORD_AUTH'])
