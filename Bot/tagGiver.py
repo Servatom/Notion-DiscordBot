@@ -20,7 +20,7 @@ def giveTags(args):
 
     #For pdf files PDF tag
     if(".pdf" in url):
-        final_tag.append({"name": "PDF", "color": "default"})
+        final_tag.append({"name": "pdf", "color": "default"})
     
     print(final_tag)
     return final_tag
