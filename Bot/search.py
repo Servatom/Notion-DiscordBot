@@ -19,10 +19,7 @@ def searchTag(args):
         os.environ['DATABASE_TOKEN'] + "/query"
     payload = json.dumps({
         "filter": {
-            "property": "Tag",
-            "multi_select": {
-                "contains": args
-            }
+            "and": args
         }
     })
     headers = {
@@ -45,5 +42,4 @@ def searchTag(args):
         search_object = SearchObject(
             result["properties"]["URL"]["url"], result["properties"]["Title"]["rich_text"][0]["plain_text"])
         search_results.append(search_object)
-
     return(search_results)
