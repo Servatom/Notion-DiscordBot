@@ -4,7 +4,7 @@ import os
 from addRecord import addData
 import validators
 from duplicateCheck import doesItExist
-from tagGiver import giveTags
+from tagGiver import giveTags, getSearchTags
 from search import SearchObject, searchTag
 
 prefix = "/"
@@ -54,8 +54,14 @@ async def search(ctx, *args):
     """Returns all entries containing the tag specified"""
     if (len(args) > 0):
         #Check if the tag exists
-        query = args[0].strip().lower()
-        search_results = searchTag(query)
+        query = ""
+
+        for tag in args:
+            query = query + tag.strip().lower() + ", "
+        query = query.rstrip(", ")
+
+        search_results = searchTag(getSearchTags(args))
+
         if (len(search_results) > 0):
             #Found a result
             embed = discord.Embed(title="Search Results", description="Results for {}".format(query), color=discord.Color.green())
