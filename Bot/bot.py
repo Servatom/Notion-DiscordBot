@@ -5,6 +5,8 @@ from addRecord import addData
 import validators
 from duplicateCheck import doesItExist
 from tagGiver import giveTags
+from search import SearchObject, searchTag
+
 prefix = "/"
 bot = commands.Bot(command_prefix=prefix)
 
@@ -47,6 +49,31 @@ async def add(ctx, *args):
         await ctx.send(embed=embed)
 
 
+@bot.command(name="search")
+async def search(ctx, *args):
+    """Returns all entries containing the tag specified"""
+    if (len(args) > 0):
+        #Check if the tag exists
+        query = args[0].strip().lower()
+        search_results = searchTag(query)
+        if (len(search_results) > 0):
+            #Found a result
+            embed = discord.Embed(title="Search Results", description="Results for {}".format(query), color=discord.Color.green())
+            count = 1
+            for result in search_results:
+                #Add the result to the embed
+                embed.add_field(name=str(count)+". "+ result.title, value=result.url, inline=False)
+                count += 1
+            await ctx.send(embed=embed)
+        else:
+            #No results
+            embed = discord.Embed(title="No Results", description="No results found for {}".format(query), color=discord.Color.red())
+            await ctx.send(embed=embed)
+
+    else:
+        #No tag provided
+        embed = discord.Embed(title="Invalid Search", description="Kuch to daal de!", color=discord.Color.red())
+        await ctx.send(embed=embed)
 
 #Getting discord token and running the bot
 try:
