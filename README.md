@@ -92,7 +92,7 @@ For multiple tags:  ```/search <Tag1> <Tag2>.....<TagN>```<br>
 
 Example:<br>
 <img src="https://servatom.com/assets/DiscordNotionBot/search.png">
-<img src="https://www.servatom.com/assets/multiTagSearch.png"><br>
+<img src="https://www.servatom.com/assets/DiscordNotionBot/multiTagSearch.png"><br>
 Instead of running the discord bot via python and exporting environment variables you can use our docker container. 
 
 ### Link to image: <a href="https://hub.docker.com/repository/docker/servatom/notiondiscordbot">Docker Hub<a>
