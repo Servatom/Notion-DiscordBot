@@ -95,4 +95,4 @@ Example:<br>
 
 Instead of running the discord bot via python and exporting environment variables you can use our docker container. 
 
-### Link to image: <a href="hub.docker.com/repository/docker/servatom/notiondiscordbot">hub.docker.com/repository/docker/servatom/notiondiscordbot<a>
+### Link to image: <a href="https://hub.docker.com/repository/docker/servatom/notiondiscordbot">Docker Hub<a>
