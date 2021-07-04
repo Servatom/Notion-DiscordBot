@@ -6,6 +6,8 @@ import validators
 from duplicateCheck import doesItExist
 from tagGiver import giveTags, getSearchTags
 from search import SearchObject, searchTag
+from delete import deleteMe
+import asyncio
 
 prefix = "/"
 bot = commands.Bot(command_prefix=prefix)
@@ -80,6 +82,62 @@ async def search(ctx, *args):
         #No tag provided
         embed = discord.Embed(title="Invalid Search", description="Kuch to daal de!", color=discord.Color.red())
         await ctx.send(embed=embed)
+
+@bot.command(name="delete")
+async def delete(ctx, *args):
+    if (len(args) > 0):
+        #Check if the tag exists
+        query = ""
+
+        for tag in args:
+            query = query + tag.strip().lower() + ", "
+        query = query.rstrip(", ")
+
+        search_results = searchTag(getSearchTags(args))
+
+        if (len(search_results) > 0):
+            #Found a result
+            embed = discord.Embed(title="Type in the serial number you want to delete", description="Results for {}".format(query), color=discord.Color.green())
+            count = 1
+            for result in search_results:
+                #Add the result to the embed
+                embed.add_field(name=str(count)+". "+ result.title, value=result.url, inline=False)
+                count += 1
+            await ctx.send(embed=embed)
+
+            def check(reply_user):
+                return reply_user.author == ctx.author and reply_user.channel == ctx.channel
+            
+            # Timeout error
+            try:
+                reply = await bot.wait_for("message", check=check, timeout=30)
+            except asyncio.TimeoutError:
+                embed = discord.Embed(title="No response", description=f"Waited for 30s no response received", color=discord.Color.red())
+                await ctx.send("You have not responded for 30s so quitting!")
+                return
+            
+            # Check if the input is valid
+            try:
+                option_to_delete = int(reply.content)
+                title = search_results[option_to_delete-1].title
+                print(title)
+                deleteMe(search_results[option_to_delete-1].id)
+                embed = discord.Embed(title="Successful! Record deleted", description=f"{title} deleted!", color=discord.Color.green())
+                await ctx.send(embed=embed)
+            except:
+                embed = discord.Embed(title="Enter Valid input", description="This option doesn't exist", color=discord.Color.red())
+                await ctx.send(embed=embed)
+
+            
+        else:
+            #No results
+            embed = discord.Embed(title="No Results", description="No results found for {}".format(query), color=discord.Color.red())
+            await ctx.send(embed=embed)
+    else:
+        #No tag provided
+        embed = discord.Embed(title="Invalid Search", description="Kuch to daal de!", color=discord.Color.red())
+        await ctx.send(embed=embed)
+        
 
 #Getting discord token and running the bot
 try:
