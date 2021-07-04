@@ -60,7 +60,7 @@ f)Now on the terminal of your machine:
 
 ```$export DISCORD_AUTH=<THE SECRET TOKEN OF BOT>```
 
-### Running Procedure:
+## Running Procedure:
 
 
 a)Now simply go into the Bot folder and run: ```$python3 bot.py```
@@ -69,7 +69,7 @@ b)On the discord developer site copy the OAuth2 link and paste it in the browser
 
 c)Bot Usage:
 
-#### Adding Record:
+### Adding Record:
 
 ```/add <URL_YOU_WANT_TO_RECORD>``` => This will add a new record to your database with a ```misc``` tag
 
@@ -85,7 +85,7 @@ Sample database populated by the bot:
 
 <img src="https://servatom.com/assets/DiscordNotionBot/db.png">
 
-#### Searching Record through tags:
+### Searching Record through tags:
 ```/search <Tag1>```<br>
 
 For multiple tags:  ```/search <Tag1> <Tag2>.....<TagN>```<br>
@@ -94,5 +94,21 @@ Example:<br>
 <img src="https://servatom.com/assets/DiscordNotionBot/search.png">
 <img src="https://www.servatom.com/assets/DiscordNotionBot/multiTagSearch.png"><br>
 Instead of running the discord bot via python and exporting environment variables you can use our docker container. 
+
+### Deleting Record through tags:
+```/delete <Tag 1>```<br>
+
+For multiple tags: ```/delete <Tag 1> <Tag2>......<Tag N>```<br>
+
+Example:<br>
+<b>Intial database:</b><br>
+<img src="https://servatom.com/assets/DiscordNotionBot/initialDB.png"><br>
+
+<b>Deleting Record:</b><br>
+<img src="https://servatom.com/assets/DiscordNotionBot/delete.png"><br>
+
+<b>Final Database:</b><br>
+<img src="https://servatom.com/assets/DiscordNotionBot/finalDB.png"><br>
+
 
 ### Link to image: <a href="https://hub.docker.com/repository/docker/servatom/notiondiscordbot">Docker Hub<a>
