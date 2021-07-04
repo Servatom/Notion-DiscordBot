@@ -69,17 +69,29 @@ b)On the discord developer site copy the OAuth2 link and paste it in the browser
 
 c)Bot Usage:
 
+#### Adding Record:
+
 ```/add <URL_YOU_WANT_TO_RECORD>``` => This will add a new record to your database with a ```misc``` tag
 
 ```/add <URL_YOU_WANT_TO_RECORD> <TAG>``` => Will add this tag
 
 For multiple tags:
 
-```/add <URL_YOU_WANT_TO_RECORD> <TAG>,<TAG1>,<TAG2>``` 
+```/add <URL_YOU_WANT_TO_RECORD> <TAG>,<TAG1>,<TAG2>```<br>
+Example:<br>
+<img src="https://servatom.com/assets/DiscordNotionBot/addRecord.png"><br>
 
-Sample database populated by the bot
+Sample database populated by the bot:
 
-<img src="https://servatom.com/assets/DiscordNotionBot/Table.png">
+<img src="https://servatom.com/assets/DiscordNotionBot/db.png">
+
+#### Searching Record through tags:
+```/search <Tag1>```<br>
+
+For multiple tags:  ```/search <Tag1> <Tag2>.....<TagN>```<br>
+
+Example:<br>
+<img src="https://servatom.com/assets/DiscordNotionBot/search.png">
 
 Instead of running the discord bot via python and exporting environment variables you can use our docker container. 
 
