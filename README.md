@@ -59,6 +59,8 @@ f)Now on the terminal of your machine:
 ```$export AUTH_KEY=<THE INTEGRATION SECRET KEY FROM NOTION>```
 
 ```$export DISCORD_AUTH=<THE SECRET TOKEN OF BOT>```
+If you want your prefix to be something else other than '/' then 
+```$export PREFIX=<Your Desired character>```
 
 ## Running Procedure:
 
