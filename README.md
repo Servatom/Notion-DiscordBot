@@ -2,7 +2,7 @@
 
 
 
-[![Build Status](https://travis-ci.com/Servatom/Notion-DiscordBot.svg?branch=main)](https://travis-ci.com/Servatom/Notion-DiscordBot)<br>
+[![Build Status](https://travis-ci.com/Servatom/Notion-DiscordBot.svg?branch=main)](https://travis-ci.com/Servatom/Notion-DiscordBot)[![Visits Badge](https://badges.pufler.dev/visits/Servatom/Notion-DiscordBot)](https://github.com/Servatom/Notion-DiscordBot/)<br>
 <br>
 <p align="center">
 <img src="https://servatom.com/assets/bannerDark.PNG" height="200px">
