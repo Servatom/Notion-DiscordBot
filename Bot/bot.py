@@ -9,7 +9,12 @@ from search import SearchObject, searchTag
 from delete import deleteMe
 import asyncio
 
-prefix = "/"
+prefix = ""
+try:
+    print(os.environ['PREFIX'])
+    prefix = str(os.environ['PREFIX'])
+except:
+    prefix = '/'
 bot = commands.Bot(command_prefix=prefix)
 
 
