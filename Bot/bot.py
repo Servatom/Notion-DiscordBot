@@ -15,8 +15,8 @@ try:
     prefix = str(os.environ['PREFIX'])
 except:
     prefix = '/'
-bot = commands.Bot(command_prefix=prefix)
-
+bot = commands.Bot(command_prefix=prefix, help_command=None)
+bot.remove_command('help')
 
 @bot.command(name="add")
 async def add(ctx, *args):
@@ -142,7 +142,20 @@ async def delete(ctx, *args):
         #No tag provided
         embed = discord.Embed(title="Invalid Search", description="Kuch to daal de!", color=discord.Color.red())
         await ctx.send(embed=embed)
-        
+
+@bot.command()
+async def help(ctx):
+    """Give commands list"""
+    commands = {f"```{prefix}add <URL> <Tag 1> <Tag2>...<TagN>```": "Add URL to database with the tags (1,2...N)",
+                f"```{prefix}search <Tag 1> <Tag2>...<TagN>```": "List of records with Tag1, Tag2...Tag N",
+                f"```{prefix}delete <Tag1> <Tag2>....<TagN>```": "To delete record having tag 1,2...N. Will give list of records. Type in the serial number of the record you want to delete"}
+    
+    embed = discord.Embed(title="List of commands:", description="These are the commands to use with this bot", color=discord.Color.green())
+    count = 1
+    for command in commands:
+          embed.add_field(name=str(count)+". "+ command, value=commands[command], inline=False)
+          count += 1
+    await ctx.send(embed=embed)
 
 #Getting discord token and running the bot
 try:
