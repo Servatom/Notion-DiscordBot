@@ -157,6 +157,10 @@ async def help(ctx):
           count += 1
     await ctx.send(embed=embed)
 
+@bot.event
+async def on_ready():
+    await bot.change_presence(status=discord.Status.idle, activity=discord.Game(f"Listening to {prefix}help"))
+
 #Getting discord token and running the bot
 try:
     print(os.environ['DISCORD_AUTH'])
