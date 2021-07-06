@@ -159,7 +159,7 @@ async def help(ctx):
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(status=discord.Status.idle, activity=discord.Game(f"Listening to {prefix}help"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{prefix}help"))
 
 #Getting discord token and running the bot
 try:
