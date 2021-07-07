@@ -58,7 +58,7 @@ f)Now on the terminal of your machine:
 
 ```$export AUTH_KEY=<THE INTEGRATION SECRET KEY FROM NOTION>```
 
-```$export DISCORD_AUTH=<THE SECRET TOKEN OF BOT>```
+```$export DISCORD_AUTH=<THE SECRET TOKEN OF BOT>```<br>
 If you want your prefix to be something else other than '/' then 
 ```$export PREFIX=<Your Desired character>```
 
@@ -75,7 +75,7 @@ c)Bot Usage:
 
 ```/add <URL_YOU_WANT_TO_RECORD>``` => This will add a new record to your database with a ```misc``` tag
 
-```/add <URL_YOU_WANT_TO_RECORD> <TAG>``` => Will add this tag
+```/add <URL_YOU_WANT_TO_RECORD> <TAG>``` => This will add a new record to your database with the ```<TAG>``` tag
 
 For multiple tags:
 
@@ -95,7 +95,7 @@ For multiple tags:  ```/search <Tag1> <Tag2>.....<TagN>```<br>
 Example:<br>
 <img src="https://servatom.com/assets/DiscordNotionBot/search.png">
 <img src="https://www.servatom.com/assets/DiscordNotionBot/multiTagSearch.png"><br>
-Instead of running the discord bot via python and exporting environment variables you can use our docker container. 
+
 
 ### Deleting Record through tags:
 ```/delete <Tag 1>```<br>
@@ -112,5 +112,5 @@ Example:<br>
 <b>Final Database:</b><br>
 <img src="https://servatom.com/assets/DiscordNotionBot/finalDB.png"><br>
 
-
+Instead of running the discord bot via python and exporting environment variables you can use our docker container. <br>
 ### Link to image: <a href="https://hub.docker.com/repository/docker/servatom/notiondiscordbot">Docker Hub<a>
