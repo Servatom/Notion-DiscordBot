@@ -162,7 +162,12 @@ async def delete(ctx, *args):
 async def upload(ctx, *args):
     async with ctx.typing():
         author = '@' + str(ctx.author).split('#')[0]
-        url = ctx.message.attachments[0].url
+        try:
+            url = ctx.message.attachments[0].url
+        except:
+            embed = discord.Embed(title="Please upload a file", description="Kuch to daal de!", color=discord.Color.red())
+            await ctx.send(embed=embed)
+            return
         
         embed = discord.Embed(title="Provide Title", description="Please give us the title of the resource you are uploading", color=discord.Color.green())
         await ctx.send(embed=embed)
