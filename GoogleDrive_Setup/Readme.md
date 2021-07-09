@@ -96,11 +96,16 @@ Now you are done.
 
 Keep the credentials.json file and generateTokenAuth.py in one folder
 
-FULFILL PYTHON REQ
+Now create a virtual environment using pipenv. 
+```$pipenv install```
+And then do ```$pipenv install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib```
+
+Now enter the pipenv shell
+```$pipenv shell```
 
 Run the generateTokenAuth.py
 
-``` python3 generateTokenAuth.py ```
+```$python3 generateTokenAuth.py ```
 
 If all goes well the web browser must open. 
 Sign in to the google drive account you mentioned earlier in the tester step
@@ -128,14 +133,3 @@ When this comes this means it was successful.
 <img src="https://servatom.com/assets/GDriveAPI/token.png">
 
 And you are done. As you can see you now have the token.json file and credentials.json file
-
-<hr>
-
-> Now if running through python script drag to bot folder.
-If in docker keep it in a directory which will be mapped
-
-
-
-
-
-
