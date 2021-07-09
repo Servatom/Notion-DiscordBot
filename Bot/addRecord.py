@@ -52,6 +52,97 @@ def addData(url, contributor, tag=[{"name": "misc", "color": "default"}]):
     payload = json.dumps(data_to_be_written)
     sendData(payload)
 
+def addPDF(url, contributor, title, tag=[{"name": "misc", "color": "default"}, {"name": "pdf", "color": "default"}]):
+    data_to_be_written = {
+        "parent": {
+            "database_id": database
+        },
+        "properties": {
+            "Tag": {
+                "multi_select": tag
+            },
+            "Title": {
+                "rich_text": [
+                    {
+                        "text": {
+                            "content": title,
+                        },
+                        "annotations": {
+                            "bold": True,
+                            "italic": False,
+                            "strikethrough": False,
+                            "underline": False,
+                            "code": False,
+                            "color": "yellow"
+                        }
+                    },
+
+                ]
+            },
+            "URL": {
+                "url": url
+            },
+            "Contributor": {
+                "title": [
+                    {
+                        "text": {
+                            "content": contributor,
+                        },
+                    }
+                ]
+            }
+        }
+    }
+
+    # Posting the dictionary on the database
+    payload = json.dumps(data_to_be_written)
+    sendData(payload)
+
+def addGenericFile(url, contributor, title, tag=[{"name": "misc", "color": "default"}]):
+    data_to_be_written = {
+        "parent": {
+            "database_id": database
+        },
+        "properties": {
+            "Tag": {
+                "multi_select": tag
+            },
+            "Title": {
+                "rich_text": [
+                    {
+                        "text": {
+                            "content": title,
+                        },
+                        "annotations": {
+                            "bold": True,
+                            "italic": False,
+                            "strikethrough": False,
+                            "underline": False,
+                            "code": False,
+                            "color": "yellow"
+                        }
+                    },
+
+                ]
+            },
+            "URL": {
+                "url": url
+            },
+            "Contributor": {
+                "title": [
+                    {
+                        "text": {
+                            "content": contributor,
+                        },
+                    }
+                ]
+            }
+        }
+    }
+
+    # Posting the dictionary on the database
+    payload = json.dumps(data_to_be_written)
+    sendData(payload)
 
 def sendData(payload):
     headers = {

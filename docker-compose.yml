@@ -12,4 +12,5 @@ services:
       - DATABASE_TOKEN=your-notion-database-token
       - AUTH_KEY=your-notion-integration-key
       - DISCORD_AUTH=your-discord-bot-token
+      - GDRIVE_FOLDER=<FOLDER_ID>
       - PREFIX=/
