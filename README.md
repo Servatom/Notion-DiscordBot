@@ -18,14 +18,14 @@
 ### Pre-Requisites:
 
 
-a)Install all the requirements using ```pip3 install -r requirements.txt```
+a) Install all the requirements using ```pip3 install -r requirements.txt```
 
-b)Create a discord bot using the developer platform of discord and obtain your **OAuth2 token**. Keep it somewhere safe
+b) Create a discord bot using the developer platform of discord and obtain your **OAuth2 token**. Keep it somewhere safe
 
-c)Go to Notion and create a new Integration  https://www.notion.so/my-integrations
+c) Go to Notion and create a new Integration  https://www.notion.so/my-integrations
 Note the internal Integration.
 
-d)Go to Notion and create a table like this:
+d) Go to Notion and create a table like this:
 
 <img src="https://servatom.com/assets/DiscordNotionBot/TableHeader%20.png">
 
@@ -35,7 +35,7 @@ d)Go to Notion and create a table like this:
 - Title of text type
 - Tag of multi-select type
 
-e)Click on the three dots and press Open as page
+e) Click on the three dots and press Open as page
 
  <img src="https://servatom.com/assets/DiscordNotionBot/OpenPage.png">
  
@@ -50,19 +50,19 @@ Note down the X part of the url (RED part)
 
 This is your database id
 
-g)Also press share again, press Invite and then click on the integration you made earlier
+g) Also press share again, press Invite and then click on the integration you made earlier
 
-h)Google Drive setup:
+h) Google Drive setup:
 All physical files or pdf files from links are downloaded on a google drive folder of your choice.
 
 **Setup Procedure:**<br>
-  a)<a href=https://github.com/Servatom/Notion-DiscordBot/tree/main/GoogleDrive_Setup>Follow the README file located here</a>
-  b)Move the ```credentials.json``` file and ```token.json``` to the ```creds``` folder in the Bot folder<br>
-  c)Now go to google drive and create a folder. The link of folder will be something like  this https://drive.google.com/drive/folders/ID <br>
+  a) <a href=https://github.com/Servatom/Notion-DiscordBot/tree/main/GoogleDrive_Setup>Follow the README file located here</a>
+  b) Move the ```credentials.json``` file and ```token.json``` to the ```creds``` folder in the Bot folder<br>
+  c) Now go to google drive and create a folder. The link of folder will be something like  this https://drive.google.com/drive/folders/ID <br>
   
-  d)Note the ID down. This will be the id of the folder where all files will be stored. Also share the folder accordingly<br>
+  d) Note the ID down. This will be the id of the folder where all files will be stored. Also share the folder accordingly<br>
 
-f)Now on the terminal of your machine:
+f) Now on the terminal of your machine:
 
 ```$export DATABASE_TOKEN=<THE DATABASE TOKEN YOU NOTED DOWN>```
 
@@ -77,11 +77,11 @@ If you want your prefix to be something else other than '/' then
 ## Running Procedure:
 
 
-a)Now simply go into the Bot folder and run: ```$python3 bot.py```
+a) Now simply go into the Bot folder and run: ```$python3 bot.py```
 
 b)On the discord developer site copy the OAuth2 link and paste it in the browser and invite it to a server you own/have permissions to do so
 
-c)Bot Usage:
+c) Bot Usage:
 
 ### Adding Record:
 
@@ -126,26 +126,26 @@ Example:<br>
 
 ### Uploading files
 You can upload files to the notion database<br>
-a)Drag your file to the chat in discord
+a) Drag your file to the chat in discord
 
 <img src="https://servatom.com/assets/DiscordNotionBot/drag.png" width="50%"><br>
 
-b)Add comment to the file you uploaded
+b) Add comment to the file you uploaded
 
 <img src="https://servatom.com/assets/DiscordNotionBot/comment.png" width="50%"><br>
 Here memoji and profile-pic are tags for the file
 
-c)It will then ask the title of the file you uploaded:
+c) It will then ask the title of the file you uploaded:
 
 <img src="https://servatom.com/assets/DiscordNotionBot/finalUpload.png" width="50%"><br>
 
-d)Now the file will uploaded on the google drive folder which you mentioned above
+d) Now the file will uploaded on the google drive folder which you mentioned above
 
-e)The database will be updated:
+e) The database will be updated:
 
 <img src="https://servatom.com/assets/DiscordNotionBot/recordAddedImg.png"><br>
 
-f)The link will open the file in google drive
+f) The link will open the file in google drive
 
 
 Instead of running the discord bot via python and exporting environment variables you can use our docker container. <br>
