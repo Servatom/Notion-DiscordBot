@@ -26,8 +26,8 @@ def uploadFiles(fileName, url):
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('/GDrive_Cred/token.json'):
-        creds = Credentials.from_authorized_user_file('/GDrive_Cred/token.json', SCOPES)
+    if os.path.exists('./creds/token.json'):
+        creds = Credentials.from_authorized_user_file('./creds/token.json', SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     else:
         print("Please run upload upload.py before using it!!!")
@@ -64,17 +64,17 @@ def giveMimeType(file):
 
 def main():
     creds = None
-    if os.path.exists('/GDrive_Cred/token.json'):
-        creds = Credentials.from_authorized_user_file('/GDrive_Cred/token.json', SCOPES)
+    if os.path.exists('./creds/token.json'):
+        creds = Credentials.from_authorized_user_file('./creds/token.json', SCOPES)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                '/GDrive_Cred/credentials.json', SCOPES)
+                './creds/credentials.json', SCOPES)
             creds = flow.run_local_server(port=5000)
         # Save the credentials for the next run
-        with open('/GDrive_Cred/token.json', 'w') as token:
+        with open('./creds/token.json', 'w') as token:
             token.write(creds.to_json())
         print("Logging in")
         return

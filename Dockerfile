@@ -17,6 +17,7 @@ RUN python -m pip install -r requirements.txt
 RUN mkdir /Bot
 WORKDIR /Bot
 RUN mkdir data
+RUN mkdir creds
 COPY ./Bot /Bot
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
@@ -24,8 +25,6 @@ COPY ./Bot /Bot
 RUN adduser -u 5678 --disabled-password --gecos "" appuser
 RUN chown -R appuser /Bot
 RUN chown -R appuser /Bot/data
-RUN mkdir -p /GDrive_Cred
-RUN chown -R appuser /GDrive_Cred
 USER appuser
 
 
