@@ -16,6 +16,7 @@ RUN python -m pip install -r requirements.txt
 
 RUN mkdir /Bot
 WORKDIR /Bot
+RUN mkdir data
 COPY ./Bot /Bot
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
