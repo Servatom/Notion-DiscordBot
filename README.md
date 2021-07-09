@@ -52,11 +52,22 @@ This is your database id
 
 g)Also press share again, press Invite and then click on the integration you made earlier
 
+h)Google Drive setup:
+All physical files or pdf files from links are downloaded on a google drive folder of your choice.
+
+**Setup Procedure:**<br>
+  a)<a href=https://github.com/Servatom/Notion-DiscordBot/tree/main/GoogleDrive_Setup>Follow the README file located here</a>
+  b)Move the ```credentials.json``` file and ```token.json``` to the ```creds``` folder in the Bot folder<br>
+  c)Now go to google drive and create a folder. The link of folder will be something like  this https://drive.google.com/drive/folders/<CODE><br>
+  d)Note the <CODE> down. This will be the id of the folder where all files will be stored. Also share the folder accordingly<br>
+
 f)Now on the terminal of your machine:
 
 ```$export DATABASE_TOKEN=<THE DATABASE TOKEN YOU NOTED DOWN>```
 
 ```$export AUTH_KEY=<THE INTEGRATION SECRET KEY FROM NOTION>```
+
+```$export GDRIVE_FOLDER=<FOLDER ID YOU NOTED ABOVE>```
 
 ```$export DISCORD_AUTH=<THE SECRET TOKEN OF BOT>```<br>
 If you want your prefix to be something else other than '/' then 
