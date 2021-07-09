@@ -58,8 +58,9 @@ All physical files or pdf files from links are downloaded on a google drive fold
 **Setup Procedure:**<br>
   a)<a href=https://github.com/Servatom/Notion-DiscordBot/tree/main/GoogleDrive_Setup>Follow the README file located here</a>
   b)Move the ```credentials.json``` file and ```token.json``` to the ```creds``` folder in the Bot folder<br>
-  c)Now go to google drive and create a folder. The link of folder will be something like  this https://drive.google.com/drive/folders/<CODE><br>
-  d)Note the <CODE> down. This will be the id of the folder where all files will be stored. Also share the folder accordingly<br>
+  c)Now go to google drive and create a folder. The link of folder will be something like  this https://drive.google.com/drive/folders/ID <br>
+  
+  d)Note the ID down. This will be the id of the folder where all files will be stored. Also share the folder accordingly<br>
 
 f)Now on the terminal of your machine:
 
@@ -122,6 +123,30 @@ Example:<br>
 
 <b>Final Database:</b><br>
 <img src="https://servatom.com/assets/DiscordNotionBot/finalDB.png"><br>
+
+### Uploading files
+You can upload files to the notion database<br>
+a)Drag your file to the chat in discord
+
+<img src="https://servatom.com/assets/DiscordNotionBot/drag.png" width="50%"><br>
+
+b)Add comment to the file you uploaded
+
+<img src="https://servatom.com/assets/DiscordNotionBot/comment.png" width="50%"><br>
+Here memoji and profile-pic are tags for the file
+
+c)It will then ask the title of the file you uploaded:
+
+<img src="https://servatom.com/assets/DiscordNotionBot/finalUpload.png" width="50%"><br>
+
+d)Now the file will uploaded on the google drive folder which you mentioned above
+
+e)The database will be updated:
+
+<img src="https://servatom.com/assets/DiscordNotionBot/recordAddedImg.png"><br>
+
+f)The link will open the file in google drive
+
 
 Instead of running the discord bot via python and exporting environment variables you can use our docker container. <br>
 ### Link to image: <a href="https://hub.docker.com/repository/docker/servatom/notiondiscordbot">Docker Hub<a>
