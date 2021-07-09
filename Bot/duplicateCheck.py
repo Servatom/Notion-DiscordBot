@@ -25,3 +25,13 @@ def doesItExist(link):
   if(len(result) == 0):
     return False
   return True
+
+def amIThere(file):
+    filesUploaded = []
+    with open("dataUploaded.txt") as log:
+        filesUploaded = [line.strip() for line in log]
+    print(filesUploaded)
+
+    if file in filesUploaded:
+        return True
+    return False

@@ -1,12 +1,14 @@
 import discord
 from discord.ext import commands
 import os
-from addRecord import addData
+from addRecord import addData, addPDF, addGenericFile
 import validators
-from duplicateCheck import doesItExist
-from tagGiver import giveTags, getSearchTags
+from duplicateCheck import doesItExist, amIThere
+from tagGiver import giveTags, getSearchTags, giveTagsFileUpload
 from search import SearchObject, searchTag
 from delete import deleteMe
+from uploadFiles import downloadFile
+from getTitle import giveTitle
 import asyncio
 
 prefix = ""
@@ -14,46 +16,59 @@ try:
     print(os.environ['PREFIX'])
     prefix = str(os.environ['PREFIX'])
 except:
-    prefix = '/'
+    prefix = '!'
+
 bot = commands.Bot(command_prefix=prefix, help_command=None)
 bot.remove_command('help')
 
 @bot.command(name="add")
 async def add(ctx, *args):
-    author = '@' + str(ctx.author).split('#')[0]
-    print(args)
+    async with ctx.typing():
+        author = '@' + str(ctx.author).split('#')[0]
+        print(args)
 
-    if(len(args) > 0):
-        url = args[0]
-        if(validators.url(url)):
-            #Its a valid link
-            if(doesItExist(url) == False):
-                #The link doesnt exist in the database
-                if(len(args) > 1):             
-                    #Add data
-                    addData(url, author, giveTags(args))
-                else:
-                    #Tag not provided
-                    addData(url, author)
-
-                #Send confirmation that data was pushed
-                embed = discord.Embed(title="Data added", description="New link added by {}".format(author), color=discord.Color.from_rgb(190, 174, 226))
+        if(len(args) > 0):
+            url = args[0]
+            if(validators.url(url)):
+                embed = discord.Embed(title="Adding Data...", description="Please Wait while I upload the data", color=discord.Color.green())
                 await ctx.send(embed=embed)
+                #Its a valid link
+                if((doesItExist(url) == False) and (amIThere(url) == False)):
+                    # amIThere checks if its on Gdrive and doesItexist on notion db
+                    #The link doesnt exist in the database
+                    if(len(args) > 1):             
+                        #Add data
+                        if(".pdf" in url):
+                            gDrive_link = downloadFile(url)
+                            addPDF(gDrive_link, author, giveTitle(url), giveTags(args))
+                        else:
+                            addData(url, author, giveTags(args))
+                    else:
+                        #Tag not provided
+                        if(".pdf" in url):
+                            gDrive_link = downloadFile(url)
+                            addPDF(gDrive_link,author, giveTitle(url))
+                        else:
+                            addData(url, author)
 
+                    #Send confirmation that data was pushed
+                    embed = discord.Embed(title="Data added", description="New link added by {}".format(author), color=discord.Color.from_rgb(190, 174, 226))
+                    await ctx.send(embed=embed)
+
+                else:
+                    #the link was already in the database
+                    #Preventing duplication of data
+                    embed = discord.Embed(title="Already Added", description="This link is already in the refrences page", color=discord.Color.red())
+                    await ctx.send(embed=embed)
             else:
-                #the link was already in the database
-                #Preventing duplication of data
-                embed = discord.Embed(title="Already Added", description="This link is already in the refrences page", color=discord.Color.red())
+                #Invalid URL provided
+                embed = discord.Embed(title="Invalid URL provided",
+                                  description="Please check the URL you have provided", color=discord.Color.red())
                 await ctx.send(embed=embed)
         else:
-            #Invalid URL provided
-            embed = discord.Embed(title="Invalid URL provided",
-                                  description="Please check the URL you have provided", color=discord.Color.red())
+            embed = discord.Embed(
+                title="URL not provided", description="Abe kuch to daal de!", color=discord.Color.red())
             await ctx.send(embed=embed)
-    else:
-        embed = discord.Embed(
-            title="URL not provided", description="Abe kuch to daal de!", color=discord.Color.red())
-        await ctx.send(embed=embed)
 
 
 @bot.command(name="search")
@@ -142,6 +157,39 @@ async def delete(ctx, *args):
         #No tag provided
         embed = discord.Embed(title="Invalid Search", description="Kuch to daal de!", color=discord.Color.red())
         await ctx.send(embed=embed)
+
+@bot.command(name="upload")
+async def upload(ctx, *args):
+    async with ctx.typing():
+        author = '@' + str(ctx.author).split('#')[0]
+        url = ctx.message.attachments[0].url
+        
+        embed = discord.Embed(title="Provide Title", description="Please give us the title of the resource you are uploading", color=discord.Color.green())
+        await ctx.send(embed=embed)
+
+        def check(reply_user):
+            return reply_user.author == ctx.author and reply_user.channel == ctx.channel
+        
+        try:
+            reply = await bot.wait_for("message", check=check, timeout=30)
+        except asyncio.TimeoutError:
+            embed = discord.Embed(title="No response", description=f"Waited for 30s no response received", color=discord.Color.red())
+            await ctx.send("You have not responded for 30s so quitting!")
+            return
+        
+        title = reply.content
+        print(title)
+        if(len(args) > 0):
+            addPDF(downloadFile(url),author, title, giveTagsFileUpload(args,url))
+        else:
+            if(".pdf" in url):
+                addPDF(downloadFile(url),author, title)
+            else:
+                addGenericFile(downloadFile(url),author, title)
+        
+    embed = discord.Embed(title="Data added", description="New link added by {}".format(author), color=discord.Color.from_rgb(190, 174, 226))
+    await ctx.send(embed=embed)
+    
 
 @bot.command()
 async def help(ctx):
