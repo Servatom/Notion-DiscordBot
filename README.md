@@ -127,7 +127,8 @@ Example:<br>
 ### Uploading files
 NOTE: In the below images the prefix used is: ```!```<br>
 
-You can upload files to the notion database<br>
+You can upload any file to the notion database. It can be a pdf, png, jpeg etc.<br>
+Here a png file is being uploaded
 a) Drag your file to the chat in discord
 
 <img src="https://servatom.com/assets/DiscordNotionBot/drag.png" width="50%"><br>
