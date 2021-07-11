@@ -131,3 +131,5 @@ dmypy.json
 .vscode
 
 .DS_Store
+Bot/dataUploaded.txt
+Creds/

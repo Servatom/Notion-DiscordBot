@@ -141,7 +141,7 @@ async def delete(ctx, *args):
                 option_to_delete = int(reply.content)
                 title = search_results[option_to_delete-1].title
                 print(title)
-                deleteMe(search_results[option_to_delete-1].id)
+                deleteMe(search_results[option_to_delete-1])
                 embed = discord.Embed(title="Successful! Record deleted", description=f"{title} deleted!", color=discord.Color.green())
                 await ctx.send(embed=embed)
             except:
@@ -201,7 +201,8 @@ async def help(ctx):
     """Give commands list"""
     commands = {f"```{prefix}add <URL> <Tag 1> <Tag2>...<TagN>```": "Add URL to database with the tags (1,2...N)",
                 f"```{prefix}search <Tag 1> <Tag2>...<TagN>```": "List of records with Tag1, Tag2...Tag N",
-                f"```{prefix}delete <Tag1> <Tag2>....<TagN>```": "To delete record having tag 1,2...N. Will give list of records. Type in the serial number of the record you want to delete"}
+                f"```{prefix}delete <Tag1> <Tag2>....<TagN>```": "To delete record having tag 1,2...N. Will give list of records. Type in the serial number of the record you want to delete",
+                f"```{prefix}upload <Tag 1> <Tag2>...<TagN>```": "Drag and drop the file and use this command in the comment section. It will upload it on the notion database with Tag 1,2.....N."}
     
     embed = discord.Embed(title="List of commands:", description="These are the commands to use with this bot", color=discord.Color.green())
     count = 1
