@@ -130,7 +130,7 @@ async def delete(ctx, *args):
             
             # Timeout error
             try:
-                reply = await bot.wait_for("message", check=check, timeout=30)
+                reply = await bot.wait_for("message", check=check, timeout=60)
             except asyncio.TimeoutError:
                 embed = discord.Embed(title="No response", description=f"Waited for 30s no response received", color=discord.Color.red())
                 await ctx.send("You have not responded for 30s so quitting!")
@@ -176,7 +176,7 @@ async def upload(ctx, *args):
             return reply_user.author == ctx.author and reply_user.channel == ctx.channel
         
         try:
-            reply = await bot.wait_for("message", check=check, timeout=30)
+            reply = await bot.wait_for("message", check=check, timeout=60)
         except asyncio.TimeoutError:
             embed = discord.Embed(title="No response", description=f"Waited for 30s no response received", color=discord.Color.red())
             await ctx.send("You have not responded for 30s so quitting!")
