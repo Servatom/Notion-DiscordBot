@@ -14,7 +14,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive','https://www.googleapis.com/au
 folder_id = ""
 
 def downloadFile(url):
-    os.system(f"wget {url} -P ./data/")
+    os.system(f"wget --no-check-certificate {url} -P ./data/")
     g_link = uploadFiles(url.split("/")[-1], url)
     return g_link
 
