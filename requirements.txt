@@ -9,7 +9,6 @@ chardet==4.0.0
 decorator==5.0.9
 discord==1.7.3
 discord.py==1.7.3
-dropbox==11.13.1
 google-api-core==1.30.0
 google-api-python-client==2.12.0
 google-auth==1.32.1
