@@ -10,7 +10,7 @@ services:
     volumes:
       - /home/user/directory_where_creds_kept:/Bot/creds
       - type: bind
-        source: /home/user/folderWhereTheTxtFileResides/dataUploaded.txt
+        source: /home/user/dataUploaded.txt
         target: /Bot/dataUploaded.txt
     environment: 
       - DATABASE_TOKEN=your-notion-database-token
