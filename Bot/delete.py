@@ -59,5 +59,7 @@ def deleteMe(searchObj_toDelete):
       delete_file(file_id)
     
 
+    # Future self raghavTinker:
+    # The deletion is essentially a soft delete. Basically the record will have all of its field changed to " " as seen in the payload
 
-    
+    # Also as for the googleDrive delete. If the file isnt owned by the user the deletion function will exit gracefully and the record will still be wiped
