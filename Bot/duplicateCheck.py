@@ -28,7 +28,7 @@ def doesItExist(link):
 
 def amIThere(file):
     filesUploaded = []
-    with open("dataUploaded.txt") as log:
+    with open("./Bot/dataUploaded.txt") as log:
         filesUploaded = [line.strip() for line in log]
     print(filesUploaded)
 
