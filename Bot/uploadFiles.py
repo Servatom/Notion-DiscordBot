@@ -28,7 +28,10 @@ def uploadFiles(fileName, url):
     # time.
     if os.path.exists('./creds/token.json'):
         creds = Credentials.from_authorized_user_file('./creds/token.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
+    
+    # if this file isnt there this may be a heroku instance
+    elif os.path.exists('/app/google-credentials.json'):
+        creds = Credentials.from_authorized_user_file('/app/google-credentials.json', SCOPES)
     else:
         print("Please run upload upload.py before using it!!!")
         sys.exit(1)
@@ -61,29 +64,6 @@ def uploadFiles(fileName, url):
 def giveMimeType(file):
     mime = magic.Magic(mime=True)
     return mime.from_file(f"./data/{file}")
-
-def main():
-    creds = None
-    if os.path.exists('./creds/token.json'):
-        creds = Credentials.from_authorized_user_file('./creds/token.json', SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                './creds/credentials.json', SCOPES)
-            creds = flow.run_local_server(port=5000)
-        # Save the credentials for the next run
-        with open('./creds/token.json', 'w') as token:
-            token.write(creds.to_json())
-        print("Logging in")
-        return
-    print("All good")
-    return
-
-if __name__ == '__main__':
-    main()
-
 try:
     print(os.environ['GDRIVE_FOLDER'])
     folder_id = str(os.environ['GDRIVE_FOLDER'])
