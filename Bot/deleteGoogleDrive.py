@@ -5,6 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import sys
+import json
 SCOPES = ['https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/drive.file']
 
 
@@ -17,6 +18,9 @@ def delete_file(file_id):
     if os.path.exists('./creds/token.json'):
         creds = Credentials.from_authorized_user_file('./creds/token.json', SCOPES)
     # If there are no (valid) credentials available, let the user log in.
+    # if this file isnt there this may be a heroku instance
+    elif os.path.exists('/app/google-credentials.json'):
+        creds = Credentials.from_authorized_user_file('/app/google-credentials.json', SCOPES)
     else:
         print("Please run upload upload.py before using it!!!")
         sys.exit(1)
