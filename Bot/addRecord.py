@@ -6,7 +6,7 @@ url = "https://api.notion.com/v1/pages"
 database = os.environ["DATABASE_TOKEN"]
 
 
-def addData(url, contributor, tag=[{"name": "misc", "color": "default"}]):
+def addData(url, contributor, tag=[{"name": "misc"}]):
     data_to_be_written = {
         "parent": {
             "database_id": database
@@ -27,7 +27,6 @@ def addData(url, contributor, tag=[{"name": "misc", "color": "default"}]):
                             "strikethrough": False,
                             "underline": False,
                             "code": False,
-                            "color": "yellow"
                         }
                     },
 
@@ -52,7 +51,7 @@ def addData(url, contributor, tag=[{"name": "misc", "color": "default"}]):
     payload = json.dumps(data_to_be_written)
     sendData(payload)
 
-def addPDF(url, contributor, title, tag=[{"name": "misc", "color": "default"}, {"name": "pdf", "color": "default"}]):
+def addPDF(url, contributor, title, tag=[{"name": "misc"}, {"name": "pdf"}]):
     data_to_be_written = {
         "parent": {
             "database_id": database
@@ -73,7 +72,6 @@ def addPDF(url, contributor, title, tag=[{"name": "misc", "color": "default"}, {
                             "strikethrough": False,
                             "underline": False,
                             "code": False,
-                            "color": "yellow"
                         }
                     },
 
@@ -98,7 +96,7 @@ def addPDF(url, contributor, title, tag=[{"name": "misc", "color": "default"}, {
     payload = json.dumps(data_to_be_written)
     sendData(payload)
 
-def addGenericFile(url, contributor, title, tag=[{"name": "misc", "color": "default"}]):
+def addGenericFile(url, contributor, title, tag=[{"name": "misc"}]):
     data_to_be_written = {
         "parent": {
             "database_id": database
@@ -119,7 +117,6 @@ def addGenericFile(url, contributor, title, tag=[{"name": "misc", "color": "defa
                             "strikethrough": False,
                             "underline": False,
                             "code": False,
-                            "color": "yellow"
                         }
                     },
 
@@ -152,5 +149,5 @@ def sendData(payload):
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-
+    print(response.text)
     print(response.status_code)
