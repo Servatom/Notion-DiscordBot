@@ -153,4 +153,7 @@ f) The link will open the file in google drive
 <hr><br>
 
 Instead of running the discord bot via python and exporting environment variables you can use our docker container. <br>
-### Link to image: <a href="https://hub.docker.com/repository/docker/servatom/notiondiscordbot">Docker Hub<a>
+### Link to image: <a href="https://hub.docker.com/repository/docker/servatom/notiondiscordbot">Docker Hub</a>
+
+<hr><br>
+You can also deploy this on heroku. Please follow the additional instructions here: <a href = "https://github.com/Servatom/Notion-DiscordBot/blob/main/HEROKU-SETUP.md"> Heroku Setup</a>
