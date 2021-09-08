@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.com/Servatom/Notion-DiscordBot.svg?branch=main)](https://travis-ci.com/Servatom/Notion-DiscordBot)[![Visits Badge](https://badges.pufler.dev/visits/Servatom/Notion-DiscordBot)](https://github.com/Servatom/Notion-DiscordBot/)<br>
 <br>
 <p align="center">
-<img src="https://assets.servatom.com/Notion-DiscordBot/bannerDark.png" height="200px">
+<img src="https://assets.servatom.com/Notion-DiscordBot/bannerDarkMode.png" height="200px">
   
 <h3 align="center"> A discord bot consuming Notion API to add and retrieve data from Notion databases. </h3>
 </p>
