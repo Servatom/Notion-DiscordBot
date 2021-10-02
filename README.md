@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.com/Servatom/Notion-DiscordBot.svg?branch=main)](https://travis-ci.com/Servatom/Notion-DiscordBot)[![Visits Badge](https://badges.pufler.dev/visits/Servatom/Notion-DiscordBot)](https://github.com/Servatom/Notion-DiscordBot/)<br>
 <br>
 <p align="center">
-<img src="https://assets.servatom.com/Notion-DiscordBot/bannerDarkMode.png" height="200px">
+<img src="IMG\bannerDarkMode.png" height="200px">
   
 <h3 align="center"> A discord bot consuming Notion API to add and retrieve data from Notion databases. </h3>
 </p>
@@ -27,7 +27,7 @@ Note the internal Integration.
 
 d) Go to Notion and create a table like this:
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/TableHeader%20.png">
+<img src="IMG\TableHeader .png">
 
 4 columns where:
 - Contributor is of property type Title
@@ -37,14 +37,14 @@ d) Go to Notion and create a table like this:
 
 e) Click on the three dots and press Open as page
 
- <img src="https://assets.servatom.com/Notion-DiscordBot/OpenPage.png">
+ <img src="IMG\OpenPage.png">
  
  <br>
  
  f)Then press share and copy the URL. The URL will look something like this:
 https://www.notion.so/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX?v=YYYYYYYYYYYYYYYYYYYYYYYYY
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/databaseID.png">
+<img src="IMG\databaseID.png">
 
 Note down the X part of the url (RED part)
 
@@ -93,11 +93,11 @@ For multiple tags:
 
 ```/add <URL_YOU_WANT_TO_RECORD> <TAG>,<TAG1>,<TAG2>```<br>
 Example:<br>
-<img src="https://assets.servatom.com/Notion-DiscordBot/addRecord.png"><br>
+<img src="IMG\addRecord.png"><br>
 
 Sample database populated by the bot:
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/db.png">
+<img src="IMG\db.png">
 
 ### Searching Record through tags:
 ```/search <Tag1>```<br>
@@ -105,8 +105,8 @@ Sample database populated by the bot:
 For multiple tags:  ```/search <Tag1> <Tag2>.....<TagN>```<br>
 
 Example:<br>
-<img src="https://assets.servatom.com/Notion-DiscordBot/search.png">
-<img src="https://assets.servatom.com/Notion-DiscordBot/multiTagSearch.png"><br>
+<img src="IMG\search.png">
+<img src="IMG\multiTagSearch.png"><br>
 
 
 ### Deleting Record through tags:
@@ -116,13 +116,13 @@ For multiple tags: ```/delete <Tag 1> <Tag2>......<Tag N>```<br>
 
 Example:<br>
 <b>Intial database:</b><br>
-<img src="https://assets.servatom.com/Notion-DiscordBot/initialDB.png"><br>
+<img src="IMG\initialDB.png"><br>
 
 <b>Deleting Record:</b><br>
-<img src="https://assets.servatom.com/Notion-DiscordBot/delete.png"><br>
+<img src="IMG\delete.png"><br>
 
 <b>Final Database:</b><br>
-<img src="https://assets.servatom.com/Notion-DiscordBot/finalDB.png"><br>
+<img src="IMG\finalDB.png"><br>
 
 ### Uploading files
 NOTE: In the below images the prefix used is: ```!```<br>
@@ -131,22 +131,22 @@ You can upload any file to the notion database. It can be a pdf, png, jpeg etc.<
 Here a png file is being uploaded<br>
 a) Drag your file to the chat in discord
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/drag.png" width="50%"><br>
+<img src="IMG\drag.png" width="50%"><br>
 
 b) Add comment to the file you uploaded
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/comment.png" width="50%"><br>
+<img src="IMG\comment.png" width="50%"><br>
 Here memoji and profile-pic are tags for the file
 
 c) It will then ask the title of the file you uploaded:
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/finalUploaded.png" width="50%"><br>
+<img src="IMG\finalUploaded.png" width="50%"><br>
 
 d) Now the file will uploaded on the google drive folder which you mentioned above
 
 e) The database will be updated:
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/recordAddedImg.png"><br>
+<img src="IMG\recordAddedImg.png"><br>
 
 f) The link will open the file in google drive
 
