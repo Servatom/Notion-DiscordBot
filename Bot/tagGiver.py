@@ -16,11 +16,11 @@ def giveTags(args):
                 if(single_tag.strip() == ""):
                     continue
                 #Appending tag to the final_tag dict
-                final_tag.append({"name": single_tag.strip().lower(), "color": "default"})
+                final_tag.append({"name": single_tag.strip().lower()})
 
     #For pdf files PDF tag
     if(".pdf" in url):
-        final_tag.append({"name": "pdf", "color": "default"})
+        final_tag.append({"name": "pdf"})
     
     print(final_tag)
     return final_tag
@@ -61,9 +61,9 @@ def giveTagsFileUpload(args, url):
                 if(single_tag.strip() == ""):
                     continue
                 #Appending tag to the final_tag dict
-                final_tag.append({"name": single_tag.strip().lower(), "color": "default"})
+                final_tag.append({"name": single_tag.strip().lower()})
 
     #For pdf files PDF tag
     if(".pdf" in url):
-        final_tag.append({"name": "pdf", "color": "default"})
+        final_tag.append({"name": "pdf"})
     return final_tag

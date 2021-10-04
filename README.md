@@ -140,7 +140,7 @@ Here memoji and profile-pic are tags for the file
 
 c) It will then ask the title of the file you uploaded:
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/finalUploaded.png" width="50%"><br>
+<img src="https://assets.servatom.com/Notion-DiscordBot/finalUpload.png" width="50%"><br>
 
 d) Now the file will uploaded on the google drive folder which you mentioned above
 
