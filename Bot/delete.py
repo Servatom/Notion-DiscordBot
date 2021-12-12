@@ -1,7 +1,7 @@
 import requests
 import json
 import os
-from deleteGoogleDrive import delete_file
+#from deleteGoogleDrive import delete_file
 
 payload = json.dumps({
   "properties": {

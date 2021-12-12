@@ -21,7 +21,10 @@ def doesItExist(link):
     'Content-Type': 'application/json'
   }
   response = requests.post(url, headers=headers, data=payload)
-  result = response.json()["results"]
+  try:
+    result = response.json()["results"]
+  except:
+    return False
   if(len(result) == 0):
     return False
   return True
