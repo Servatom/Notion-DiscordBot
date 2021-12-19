@@ -15,10 +15,10 @@ def getTitle(url):
         return None
 
 def getGuildData():
-    data = []
+    data = {}
     guilds = db.query(models.Clients).all()
     for guild in guilds:
-        data.append(guild.serialize)
+        data[str(guild.guild_id)] = guild
     return data
 
 def getPrefixes():
