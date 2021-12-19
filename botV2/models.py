@@ -21,4 +21,13 @@ class Clients(Base):
         self.prefix = prefix
         self.contributor = contributor
 
+    @property
+    def serialize(self):
+        return {
+            "guild_id": self.guild_id,
+            "notion_api_key": self.notion_api_key,
+            "notion_db_id": self.notion_db_id,
+            "tag": self.tag,
+            "contributor": self.contributor
+        }
 
