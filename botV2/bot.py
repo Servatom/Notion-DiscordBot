@@ -14,13 +14,13 @@ prefix = ""
 token = ""
 
 try:
-    prefix = str(os.environ['PREFIX'])
+    prefix = str(os.environ["PREFIX"])
 except:
     print("No prefix found, using default: !")
     prefix = "$"
 # get token
 try:
-    token = str(os.environ['TOKEN'])
+    token = str(os.environ["TOKEN"])
 except:
     print("No token found, exiting...")
     exit()
@@ -35,6 +35,7 @@ def get_prefix(client, message):
         prefix = "!"
     return prefix
 
+
 bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
 
 
@@ -44,19 +45,31 @@ async def setup(ctx):
     embed = discord.Embed(title="Enter the notion API key")
     await ctx.send(embed=embed)
     try:
-        msg = await bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout=60)
+        msg = await bot.wait_for(
+            "message", check=lambda message: message.author == ctx.author, timeout=60
+        )
     except asyncio.TimeoutError:
-        discord.Embed(title="Timed out", description="You took too long to respond", color=discord.Color.red())
+        discord.Embed(
+            title="Timed out",
+            description="You took too long to respond",
+            color=discord.Color.red(),
+        )
         await ctx.send(embed=embed)
         return
     notion_api_key = msg.content
-    
+
     embed = discord.Embed(title="Enter the notion database id")
     await ctx.send(embed=embed)
     try:
-        msg = await bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout=60)
+        msg = await bot.wait_for(
+            "message", check=lambda message: message.author == ctx.author, timeout=60
+        )
     except asyncio.TimeoutError:
-        discord.Embed(title="Timed out", description="You took too long to respond", color=discord.Color.red())
+        discord.Embed(
+            title="Timed out",
+            description="You took too long to respond",
+            color=discord.Color.red(),
+        )
         await ctx.send(embed=embed)
         return
     notion_db_id = msg.content
@@ -64,9 +77,15 @@ async def setup(ctx):
     embed = discord.Embed(title="Do you to enable tagging? (y/n)")
     await ctx.send(embed=embed)
     try:
-        msg = await bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout=60)
+        msg = await bot.wait_for(
+            "message", check=lambda message: message.author == ctx.author, timeout=60
+        )
     except asyncio.TimeoutError:
-        discord.Embed(title="Timed out", description="You took too long to respond", color=discord.Color.red())
+        discord.Embed(
+            title="Timed out",
+            description="You took too long to respond",
+            color=discord.Color.red(),
+        )
         await ctx.send(embed=embed)
         return
     if msg.content == "y":
@@ -74,10 +93,14 @@ async def setup(ctx):
     else:
         tag = False
 
-    embed = discord.Embed(title="Do you want to add contributors' names to the database? (y/n)")
+    embed = discord.Embed(
+        title="Do you want to add contributors' names to the database? (y/n)"
+    )
     await ctx.send(embed=embed)
     try:
-        msg = await bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout=60)
+        msg = await bot.wait_for(
+            "message", check=lambda message: message.author == ctx.author, timeout=60
+        )
     except asyncio.TimeoutError:
         await ctx.send("You have not responded for 30s so quitting!")
         return
@@ -89,17 +112,30 @@ async def setup(ctx):
     embed = discord.Embed(title="Enter a prefix for your bot (default=!)")
     await ctx.send(embed=embed)
     try:
-        msg = await bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout=60)
+        msg = await bot.wait_for(
+            "message", check=lambda message: message.author == ctx.author, timeout=60
+        )
     except asyncio.TimeoutError:
-        discord.Embed(title="Timed out", description="You took too long to respond", color=discord.Color.red())
+        discord.Embed(
+            title="Timed out",
+            description="You took too long to respond",
+            color=discord.Color.red(),
+        )
         await ctx.send(embed=embed)
         return
     prefix = msg.content
-    
+
     # Rupanshi's TODO: Verify all these details
 
     # add to database
-    new_client = models.Clients(huild_id=guild_id, notion_api_key=notion_api_key, notion_db_id=notion_db_id, tag=tag, prefix=prefix, contributor=contributor)
+    new_client = models.Clients(
+        guild_id=guild_id,
+        notion_api_key=notion_api_key,
+        notion_db_id=notion_db_id,
+        tag=tag,
+        prefix=prefix,
+        contributor=contributor,
+    )
     db.add(new_client)
     db.commit()
     await ctx.send("Added to database")
@@ -120,8 +156,11 @@ async def fill(ctx):
     prefix = "!"
     contributor = True
     # add record to database
-    db.add(models.Clients(guild_id, notion_api_key, notion_db_id, tag, prefix, contributor))
+    db.add(
+        models.Clients(guild_id, notion_api_key, notion_db_id, tag, prefix, contributor)
+    )
     db.commit()
     await ctx.send("Added record to database.")
+
 
 bot.run(token)
