@@ -13,6 +13,14 @@ models.Base.metadata.create_all(bind=engine)
 prefix = ""
 token = ""
 
+
+# guild data
+guild_data = {}
+
+# guild prefix_data
+prefix_data = {}
+
+
 try:
     prefix = str(os.environ["PREFIX"])
 except:
@@ -27,13 +35,22 @@ except:
 
 
 def get_prefix(client, message):
-    prefixes = getPrefixes()
+    global prefix_data
     prefix = ""
     try:
-        prefix = prefixes[str(message.guild.id)]
+        prefix = prefix_data[str(message.guild.id)]
     except:
         prefix = "!"
     return prefix
+
+def botSetup():
+    # get guild data
+    global guild_data
+    guild_data = getGuildData()
+
+    # get prefix data
+    global prefix_data
+    prefix_data = getPrefixes()
 
 
 bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
@@ -162,5 +179,5 @@ async def fill(ctx):
     db.commit()
     await ctx.send("Added record to database.")
 
-
+botSetup()
 bot.run(token)
