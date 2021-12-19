@@ -133,3 +133,6 @@ dmypy.json
 .DS_Store
 Bot/dataUploaded.txt
 Creds/
+*.sqlite
+*.sqlite3
+*.sqlite3-journal
