@@ -2,8 +2,21 @@ import requests
 from bs4 import BeautifulSoup
 from database import SessionLocal, engine
 import models
+from fuzzywuzzy import fuzz
+import json
 
 db = SessionLocal()
+
+
+class SearchData:
+    id = ""
+    title = ""
+    url = ""
+
+    def __init__(self, id, title, url):
+        self.id = id
+        self.title = title
+        self.url = url
 
 def getTitle(url):
     try:
@@ -27,3 +40,52 @@ def getPrefixes():
     for guild in guilds:
         prefixes[str(guild.guild_id)] = guild.prefix
     return prefixes
+
+def getAllTitles(notion_db, notion_api):
+    url = "https://api.notion.com/v1/databases/" + notion_db + "/query"
+    headers = {
+        'Authorization': notion_api,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2021-08-16'
+    }
+
+    payload = {
+    "filter":{
+        "property": "Title",
+        "text": {
+            "contains": ""
+        }
+    }
+    }   
+    payload = json.dumps(payload)
+    response = requests.post(url, headers=headers, data=payload)
+    data = json.loads(response.text)
+    objects = {}
+    for row in data['results']:
+        try:
+            title = row["properties"]["Title"]["rich_text"][0]["text"]["content"]
+            obj = SearchData(row["id"], title, row["properties"]["URL"]["url"])
+            objects[title] = obj
+        except:
+            pass
+    return objects
+
+
+def search(search, notion_db, notion_api):
+    # first get all the data of the database
+    titles = getAllTitles(notion_db, notion_api)
+    weights = {}
+
+    for title in titles:
+        title_list = title.lower().split(" ")
+        search_list = search.lower().split(" ")
+        for word in search_list:
+            if word in title_list:
+                if titles[title] in weights:
+                    # fuzzy ratio
+                    weights[titles[title]] = fuzz.ratio(search, title)
+                else:
+                    weights[titles[title]] = fuzz.ratio(search, title)
+    
+    # return objects in descending order in list
+    return sorted(weights, key=weights.get, reverse=True)
