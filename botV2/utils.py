@@ -81,11 +81,11 @@ def search(search, notion_db, notion_api):
         search_list = search.lower().split(" ")
         for word in search_list:
             if word in title_list:
-                if titles[title] in weights:
+                if titles[title] not in weights:
                     # fuzzy ratio
                     weights[titles[title]] = fuzz.ratio(search, title)
                 else:
-                    weights[titles[title]] = fuzz.ratio(search, title)
+                    break
     
     # return objects in descending order in list
     return sorted(weights, key=weights.get, reverse=True)
