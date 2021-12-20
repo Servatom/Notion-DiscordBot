@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "28bb046de192a0dd2c7a8ff0d92093352f490b862e4701eaa76199e4be22a748"
+            "sha256": "d5567eb9a0ae482ae361ed8597f39e35115d45239d7d9a1653ccabc361eadd33"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -138,6 +138,14 @@
             ],
             "index": "pypi",
             "version": "==1.7.3"
+        },
+        "fuzzywuzzy": {
+            "hashes": [
+                "sha256:45016e92264780e58972dca1b3d939ac864b78437422beecebb3095f8efd00e8",
+                "sha256:928244b28db720d1e0ee7587acf660ea49d7e4c632569cad4f1cd7e68a5f0993"
+            ],
+            "index": "pypi",
+            "version": "==0.18.0"
         },
         "google-api-core": {
             "hashes": [
@@ -364,6 +372,13 @@
             ],
             "index": "pypi",
             "version": "==2.4.7"
+        },
+        "python-levenshtein": {
+            "hashes": [
+                "sha256:dc2395fbd148a1ab31090dd113c366695934b9e85fe5a4b2a032745efd0346f6"
+            ],
+            "index": "pypi",
+            "version": "==0.12.2"
         },
         "python-magic": {
             "hashes": [
