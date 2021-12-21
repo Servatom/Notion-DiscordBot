@@ -83,9 +83,15 @@ def search(search, notion_db, notion_api):
             if word in title_list:
                 if titles[title] not in weights:
                     # fuzzy ratio
-                    weights[titles[title]] = fuzz.ratio(search, title)
+                    # replacing - / from title and replacing it with a space
+                    
+                    weights[titles[title]] = fuzz.partial_ratio(search.lower(), title.lower().replace("-", " ").replace("/", " "))
                 else:
                     break
     
     # return objects in descending order in list
     return sorted(weights, key=weights.get, reverse=True)
+
+# testing purposes only
+#for obj in search("leetcode", "db", "key"):
+ #   print(obj.title)
