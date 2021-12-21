@@ -2,11 +2,10 @@ import asyncio
 import discord
 from discord.ext import commands
 import os
-import json
 from database import SessionLocal, engine
 import models
 from utils import *
-
+from deleteRecord import *
 db = SessionLocal()
 models.Base.metadata.create_all(bind=engine)
 
@@ -25,7 +24,7 @@ try:
     prefix = str(os.environ["PREFIX"])
 except:
     print("No prefix found, using default: !")
-    prefix = "$"
+    prefix = "*"
 # get token
 try:
     token = str(os.environ["TOKEN"])
@@ -36,11 +35,10 @@ except:
 
 def get_prefix(client, message):
     global prefix_data
-    prefix = ""
     try:
         prefix = prefix_data[str(message.guild.id)]
     except:
-        prefix = "!"
+        prefix = "*"
     return prefix
 
 def botSetup():
@@ -58,6 +56,7 @@ bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
 
 @bot.command(name="setup")
 async def setup(ctx):
+    global guild_data
     guild_id = ctx.guild.id
     embed = discord.Embed(title="Enter the notion API key")
     await ctx.send(embed=embed)
@@ -155,29 +154,41 @@ async def setup(ctx):
     )
     db.add(new_client)
     db.commit()
+
+    # Add the object to the guild_data
+    guild_data[str(guild_id)] = new_client
     await ctx.send("Added to database")
 
-
-@bot.command(name="fill")
-async def fill(ctx):
-    # fill database with guild
+@bot.command("delete")
+async def delete(ctx, *args):
+    print("here")
+    # TODO: raghavTinker paginate the search results
+    # check if the guild has tags enabled
     # get guild id
     guild_id = ctx.guild.id
-    # get notion api key
-    notion_api_key = "lol"
-    # get notion db id
-    notion_db_id = "lol"
-    # get tag
-    tag = True
-    # get prefix
-    prefix = "!"
-    contributor = True
-    # add record to database
-    db.add(
-        models.Clients(guild_id, notion_api_key, notion_db_id, tag, prefix, contributor)
-    )
-    db.commit()
-    await ctx.send("Added record to database.")
+    # get guild info 
+    client = guild_data[str(guild_id)]
+    
+    query = ""
+    # check args
+    if(len(args) > 0):
+        # received data
+        for arg in args:
+            query += arg + " "
+    else:
+        # no data received
+        await ctx.send("Please ask something to be asked")
+        return
+    query = query.strip()
+    if client.tag:
+        # no tags enabled so search by title
+        # get the title of the message
+        await delByTitle(ctx, query, client, bot)
+    else:
+        await delByTag(ctx, query, client, bot)
+
 
 botSetup()
+print(guild_data)
+print(prefix_data)
 bot.run(token)

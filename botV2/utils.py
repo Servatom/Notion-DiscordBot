@@ -71,7 +71,8 @@ def getAllTitles(notion_db, notion_api):
     return objects
 
 
-def search(search, notion_db, notion_api):
+def searchByTitle(search, notion_db, notion_api):
+    print(search)
     # first get all the data of the database
     titles = getAllTitles(notion_db, notion_api)
     weights = {}
@@ -93,5 +94,5 @@ def search(search, notion_db, notion_api):
     return sorted(weights, key=weights.get, reverse=True)
 
 # testing purposes only
-#for obj in search("leetcode", "db", "key"):
- #   print(obj.title)
+#for obj in searchByTitle("django", "9e449365893e4657a5502f4723771ece", "secret_D50ybSSLDed6mTFOy188nHShw2XWPh2v1FFiUAviMfG"):
+ #  print(obj.title)
