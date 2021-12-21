@@ -163,8 +163,15 @@ async def delByTitle(ctx, query, client, bot):
     try:
         option_to_delete = int(msg.content)
         title = search_results[option_to_delete-1].title
-        print(title)
-        #deleteMe(search_results[option_to_delete-1])
+        
+        # check if contribuor turned on 
+        if client.contributor:
+            # enabled contributor
+            deleteWithoutTag(search_results[option_to_delete-1], client.notion_api_key)
+        else:
+            # disabled contributor
+            deleteWithoutTagAndContributor(search_results[option_to_delete-1], client.notion_api_key)
+            
         embed = discord.Embed(title="Successful! Record deleted", description=f"{title} deleted!", color=discord.Color.green())
         await ctx.send(embed=embed)
     except:
