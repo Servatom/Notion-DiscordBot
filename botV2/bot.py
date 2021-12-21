@@ -161,6 +161,9 @@ async def setup(ctx):
 
 @bot.command("delete")
 async def delete(ctx, *args):
+    if not checkIfGuildPresent(ctx.guild.id):
+        await ctx.send("You are not registered, please run `!setup` first")
+        return
     print("here")
     # TODO: raghavTinker paginate the search results
     # check if the guild has tags enabled
