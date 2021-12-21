@@ -96,3 +96,9 @@ def searchByTitle(search, notion_db, notion_api):
 # testing purposes only
 #for obj in searchByTitle("django", "9e449365893e4657a5502f4723771ece", "secret_D50ybSSLDed6mTFOy188nHShw2XWPh2v1FFiUAviMfG"):
  #  print(obj.title)
+
+def checkIfGuildPresent(guildId):
+    guild = db.query(models.Clients).filter(models.Clients.guild_id == guildId).first()
+    if guild:
+        return True
+    return False
