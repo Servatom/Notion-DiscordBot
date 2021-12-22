@@ -2,6 +2,7 @@ import requests
 import json
 import os
 from utils import *
+from search import *
 import discord
 from discord.ext import commands
 import asyncio
@@ -171,7 +172,7 @@ async def delByTitle(ctx, query, client, bot):
         else:
             # disabled contributor
             deleteWithoutTagAndContributor(search_results[option_to_delete-1], client.notion_api_key)
-            
+
         embed = discord.Embed(title="Successful! Record deleted", description=f"{title} deleted!", color=discord.Color.green())
         await ctx.send(embed=embed)
     except:

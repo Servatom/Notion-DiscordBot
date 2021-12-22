@@ -6,6 +6,7 @@ from database import SessionLocal, engine
 import models
 from utils import *
 from deleteRecord import *
+from search import searchByTitleBot
 db = SessionLocal()
 models.Base.metadata.create_all(bind=engine)
 
@@ -164,7 +165,7 @@ async def delete(ctx, *args):
     if not checkIfGuildPresent(ctx.guild.id):
         await ctx.send("You are not registered, please run `!setup` first")
         return
-    print("here")
+
     # TODO: raghavTinker paginate the search results
     # check if the guild has tags enabled
     # get guild id
@@ -172,24 +173,43 @@ async def delete(ctx, *args):
     # get guild info 
     client = guild_data[str(guild_id)]
     
-    query = ""
-    # check args
-    if(len(args) > 0):
-        # received data
-        for arg in args:
-            query += arg + " "
+    query = getQueryForTitle(args)
+    
+    if query:
+        if not client.tag:
+            # no tags enabled so search by title
+            # get the title of the message
+            await delByTitle(ctx, query, client, bot)
+        else:
+            # delete by tag
+            await delByTag(ctx, query, client, bot)
     else:
-        # no data received
-        await ctx.send("Please ask something to be asked")
-        return
-    query = query.strip()
-    if client.tag:
-        # no tags enabled so search by title
-        # get the title of the message
-        await delByTitle(ctx, query, client, bot)
-    else:
-        await delByTag(ctx, query, client, bot)
+        # embed
+        embed = discord.Embed(
+            title="No query found",
+            description="Please enter a valid query",
+            color=discord.Color.red(),
+        )
+        await ctx.send(embed=embed)
 
+@bot.command("searchTitle")
+async def searchTitle(ctx, *args):
+    if not checkIfGuildPresent(ctx.guild.id):
+        await ctx.send("You are not registered, please run `!setup` first")
+        return
+    guild_id = ctx.guild.id
+    client = guild_data[str(guild_id)]
+    query = getQueryForTitle(args)
+    if query:
+        await searchByTitleBot(ctx, query, client, bot)
+    else:
+        # embed send
+        embed = discord.Embed(
+            title="Please enter a valid query",
+            description="You can search by title by typing `!searchTitle <query>`",
+            color=discord.Color.red(),
+        )
+        await ctx.send(embed=embed)
 
 botSetup()
 print(guild_data)
