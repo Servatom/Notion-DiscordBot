@@ -7,6 +7,7 @@ import models
 from utils import *
 from deleteRecord import *
 from search import searchByTitleBot
+from setupBot import setupConversation
 db = SessionLocal()
 models.Base.metadata.create_all(bind=engine)
 
@@ -58,106 +59,24 @@ bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
 @bot.command(name="setup")
 async def setup(ctx):
     global guild_data
-    guild_id = ctx.guild.id
-    embed = discord.Embed(title="Enter the notion API key")
-    await ctx.send(embed=embed)
-    try:
-        msg = await bot.wait_for(
-            "message", check=lambda message: message.author == ctx.author, timeout=60
-        )
-    except asyncio.TimeoutError:
-        discord.Embed(
-            title="Timed out",
-            description="You took too long to respond",
-            color=discord.Color.red(),
-        )
-        await ctx.send(embed=embed)
-        return
-    notion_api_key = msg.content
-
-    embed = discord.Embed(title="Enter the notion database id")
-    await ctx.send(embed=embed)
-    try:
-        msg = await bot.wait_for(
-            "message", check=lambda message: message.author == ctx.author, timeout=60
-        )
-    except asyncio.TimeoutError:
-        discord.Embed(
-            title="Timed out",
-            description="You took too long to respond",
-            color=discord.Color.red(),
-        )
-        await ctx.send(embed=embed)
-        return
-    notion_db_id = msg.content
-
-    embed = discord.Embed(title="Do you to enable tagging? (y/n)")
-    await ctx.send(embed=embed)
-    try:
-        msg = await bot.wait_for(
-            "message", check=lambda message: message.author == ctx.author, timeout=60
-        )
-    except asyncio.TimeoutError:
-        discord.Embed(
-            title="Timed out",
-            description="You took too long to respond",
-            color=discord.Color.red(),
-        )
-        await ctx.send(embed=embed)
-        return
-    if msg.content == "y":
-        tag = True
-    else:
-        tag = False
-
-    embed = discord.Embed(
-        title="Do you want to add contributors' names to the database? (y/n)"
-    )
-    await ctx.send(embed=embed)
-    try:
-        msg = await bot.wait_for(
-            "message", check=lambda message: message.author == ctx.author, timeout=60
-        )
-    except asyncio.TimeoutError:
-        await ctx.send("You have not responded for 30s so quitting!")
-        return
-    if msg.content == "y":
-        contributor = True
-    else:
-        contributor = False
-
-    embed = discord.Embed(title="Enter a prefix for your bot (default=!)")
-    await ctx.send(embed=embed)
-    try:
-        msg = await bot.wait_for(
-            "message", check=lambda message: message.author == ctx.author, timeout=60
-        )
-    except asyncio.TimeoutError:
-        discord.Embed(
-            title="Timed out",
-            description="You took too long to respond",
-            color=discord.Color.red(),
-        )
-        await ctx.send(embed=embed)
-        return
-    prefix = msg.content
-
     # Rupanshi's TODO: Verify all these details
-
+    
+    setup_data = await setupConversation(ctx, bot)
+    print(setup_data)
     # add to database
+
     new_client = models.Clients(
-        guild_id=guild_id,
-        notion_api_key=notion_api_key,
-        notion_db_id=notion_db_id,
-        tag=tag,
-        prefix=prefix,
-        contributor=contributor,
+        guild_id=setup_data["guild_id"],
+        notion_api_key=setup_data["notion_api"],
+        notion_db_id=setup_data["notion_db"],
+        tag=setup_data["tag"],
+        prefix=setup_data["prefix"],
+        contributor=setup_data["contributor"],
     )
     db.add(new_client)
     db.commit()
 
-    # Add the object to the guild_data
-    guild_data[str(guild_id)] = new_client
+    guild_data[setup_data["guild_id"]] = new_client
     await ctx.send("Added to database")
 
 @bot.command("delete")
@@ -167,6 +86,7 @@ async def delete(ctx, *args):
         return
 
     # TODO: raghavTinker paginate the search results
+    
     # check if the guild has tags enabled
     # get guild id
     guild_id = ctx.guild.id
