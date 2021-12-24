@@ -67,7 +67,7 @@ async def setup(ctx):
     
     # continue the conversation for setup and get a dictionary of the data. Data verification must happen in this function itself.
     # Rupanshi's TODO: Verify all these details
-    setup_data = await setupConversation(ctx, bot):
+    setup_data = await setupConversation(ctx, bot)
     if not setup_data:
         # nothing was returned the data wasnt given properly
         embed = discord.Embed(title="Error", description="The data you provided was not correct. Please try again.", color=0xFF0000)
