@@ -61,22 +61,24 @@ def searchByTitle(search, notion_db, notion_api):
 
 async def searchByTitleBot(ctx, query, client, bot):
     # first get all the data of the database
-    search_results = searchByTitle(query.strip(), client.notion_db_id, client.notion_api_key)
+    async with ctx.typing():
+        search_results = searchByTitle(query.strip(), client.notion_db_id, client.notion_api_key)
     
-    # check if there are results
-    print(len(search_results))
-    if len(search_results) == 0:
-        # embeded
-        embed = discord.Embed(title="No results found", description="", color=discord.Color.red())
-        await ctx.send(embed=embed)
-        return
-    count = 1    
+        # check if there are results
+        print(len(search_results))
+        if len(search_results) == 0:
+            # embeded
+            embed = discord.Embed(title="No results found", description="", color=discord.Color.red())
+            await ctx.send(embed=embed)
+            return
+
+        count = 1    
     
-    embed = discord.Embed(title="Search Results", description="Results for {}".format(query), color=discord.Color.green())
-    for result in search_results:
-        # make sure title and url are present
-        if result.title.strip() == "" and result.url == None:
-            continue
-        embed.add_field(name=str(count)+". "+ result.title.strip(), value=result.url, inline=False)
-        count += 1
+        embed = discord.Embed(title="Search Results", description="Results for {}".format(query), color=discord.Color.green())
+        for result in search_results:
+            # make sure title and url are present
+            if result.title.strip() == "" and result.url == None:
+                continue
+            embed.add_field(name=str(count)+". "+ result.title.strip(), value=result.url, inline=False)
+            count += 1
     await ctx.send(embed=embed)
