@@ -206,7 +206,7 @@ async def searchTitle(ctx, *args):
         # embed send
         embed = discord.Embed(
             title="Please enter a valid query",
-            description="You can search by title by typing `!searchTitle <query>`",
+            description="You can search by title by typing `" + client.prefix + "searchTitle <query>`",
             color=discord.Color.red(),
         )
         await ctx.send(embed=embed)
