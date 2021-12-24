@@ -59,12 +59,25 @@ bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
 @bot.command(name="setup")
 async def setup(ctx):
     global guild_data
-    # Rupanshi's TODO: Verify all these details
     
-    setup_data = await setupConversation(ctx, bot)
+    # check if we need to allow the user to update the settings if needed
+    if str(ctx.guild.id) in guild_data:
+        await ctx.send("This guild is already setup")
+        return
+    
+    # continue the conversation for setup and get a dictionary of the data. Data verification must happen in this function itself.
+    # Rupanshi's TODO: Verify all these details
+    setup_data = await setupConversation(ctx, bot):
+    if not setup_data:
+        # nothing was returned the data wasnt given properly
+        embed = discord.Embed(title="Error", description="The data you provided was not correct. Please try again.", color=0xFF0000)
+        await ctx.send(embed=embed)
+        return
+    
     print(setup_data)
+    
+    # check if guild id already in database
     # add to database
-
     new_client = models.Clients(
         guild_id=setup_data["guild_id"],
         notion_api_key=setup_data["notion_api"],
@@ -76,6 +89,7 @@ async def setup(ctx):
     db.add(new_client)
     db.commit()
 
+    # add to guild_data
     guild_data[setup_data["guild_id"]] = new_client
     await ctx.send("Added to database")
 
