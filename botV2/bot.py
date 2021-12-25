@@ -61,6 +61,7 @@ async def setup(ctx):
     global guild_data
     
     # check if we need to allow the user to update the settings if needed
+    # Rupanshi's TODO: Update setup to allow user to update settings
     if str(ctx.guild.id) in guild_data:
         await ctx.send("This guild is already setup")
         return
@@ -144,6 +145,43 @@ async def searchTitle(ctx, *args):
             color=discord.Color.red(),
         )
         await ctx.send(embed=embed)
+
+@bot.command(name="prefix")
+async def prefix(ctx):
+    """
+    Change the prefix of the bot
+    """
+    prefix = db.query(models.Clients).filter_by(guild_id=ctx.guild.id).first().prefix
+    embed = discord.Embed(
+        title="Enter the new prefix for your bot",
+        description="Current prefix is : " + prefix,
+    )
+    await ctx.send(embed=embed)
+    try:
+        msg = await bot.wait_for(
+            "message", check=lambda message: message.author == ctx.author, timeout=60
+        )
+    except asyncio.TimeoutError:
+        embed = discord.Embed(
+            title="Timed out",
+            description="You took too long to respond",
+            color=discord.Color.red(),
+        )
+        await ctx.send(embed=embed)
+        return
+    new_prefix = msg.content.strip()
+    db.query(models.Clients).filter_by(guild_id=ctx.guild.id).update(
+        {"prefix": new_prefix}
+    )
+    try:
+        db.commit()
+    except Exception as e:
+        print(e)
+        await ctx.send("Something went wrong, please try again!")
+        return
+    await ctx.send("Successfully updated prefix!")
+    global prefix_data
+    prefix_data[str(ctx.guild.id)] = new_prefix
 
 botSetup()
 print(guild_data)
