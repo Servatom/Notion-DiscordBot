@@ -3,8 +3,9 @@ from sqlalchemy.sql.expression import null
 from sqlalchemy.sql.sqltypes import Boolean
 from database import Base
 
+
 class Clients(Base):
-    __tablename__ = 'clients'
+    __tablename__ = "clients"
     id = Column(Integer, primary_key=True, index=True)
     guild_id = Column(Integer, index=True, nullable=False)
     notion_api_key = Column(String, nullable=False)
@@ -13,7 +14,9 @@ class Clients(Base):
     contributor = Column(Boolean, default=False)
     prefix = Column(String, default="!")
 
-    def __init__(self, guild_id, notion_api_key, notion_db_id, tag, prefix, contributor):
+    def __init__(
+        self, guild_id, notion_api_key, notion_db_id, tag, contributor, prefix="*"
+    ):
         self.guild_id = guild_id
         self.notion_api_key = notion_api_key
         self.notion_db_id = notion_db_id
@@ -28,6 +31,5 @@ class Clients(Base):
             "notion_api_key": self.notion_api_key,
             "notion_db_id": self.notion_db_id,
             "tag": self.tag,
-            "contributor": self.contributor
+            "contributor": self.contributor,
         }
-
