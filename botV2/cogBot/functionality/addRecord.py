@@ -71,6 +71,7 @@ def addAllData(url, notion_api_key, notion_db_id, contributor, tag, title):
                             "strikethrough": False,
                             "underline": False,
                             "code": False,
+                            "color": "yellow"
                         }
                     },
 
@@ -127,7 +128,7 @@ def addWithoutContributor(url, notion_api_key, notion_db_id, tag, title):
     payload = json.dumps(data_to_be_written)
     sendData(payload, notion_api_key)
 
-def addDataWithoutTag(url, notion_api_key, notion_db_id, contributor, title):
+def addDataWithoutTag(url, notion_api_key, notion_db_id, title, contributor):
     data_to_be_written = {
         "parent": {
             "database_id": notion_db_id
@@ -166,18 +167,6 @@ def addDataWithoutTag(url, notion_api_key, notion_db_id, contributor, title):
     }
     payload = json.dumps(data_to_be_written)
     sendData(payload, notion_api_key)
-
-def addData(guild_id, url, contributor, tag=[{"name": "misc"}]):
-    # extract database id from database
-    notion_db_id = db.query(models.Clients.notion_db_id).filter(models.Clients.guild_id == guild_id).first()
-    notion_db_id = notion_db_id[0]
-    # get notion api key
-    notion_api_key = db.query(models.Clients.notion_api_key).filter(models.Clients.guild_id == guild_id).first()
-    notion_api_key = notion_api_key[0]
-
-    # is tag
-    isTag = db.query(models.Clients.tag).filter(models.Clients.guild_id == guild_id).first()
-    isTag = isTag[0]
 
 def sendData(payload, notion_api_key):
     headers = {

@@ -56,7 +56,8 @@ fillPrefix()
 
 cogs = [
     'cogs.delete',
-    'cogs.search'
+    'cogs.search',
+    'cogs.add'
 ]
 
 bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
