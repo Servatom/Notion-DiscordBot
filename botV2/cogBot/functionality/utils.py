@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from database import SessionLocal, engine
 import models
 import json
+import validators
 
 db = SessionLocal()
 
@@ -25,6 +26,38 @@ def getTitle(url):
         return title_tag.get_text()
     except:
         return None
+
+def checkURL(url):
+    if validators.url(url):
+        return True
+    return False
+
+def getTags(args):
+    url = args[0]
+    #Tag provided
+    final_tag = []
+    list_of_tags = []
+                    
+    #Multiple
+    for tag in args[1:]:
+        #Adding the arguments to list_of_tags
+        list_of_tags.append(tag)
+        for tag in list_of_tags:
+            #Splitting the arguments to get the tags
+            tag_list = tag.split(",")
+            for single_tag in tag_list:
+                if(single_tag.strip() == ""):
+                    pass
+                #Appending tag to the final_tag dict
+                print(single_tag.strip().lower())
+                if {"name": single_tag.strip().lower()} not in final_tag:
+                    final_tag.append({"name": single_tag.strip().lower()})
+                else:
+                    pass
+    if len(final_tag) > 0:
+        return final_tag
+    else:
+        return [{"name": "misc"}]
 
 def getGuildData():
     data = {}
@@ -77,3 +110,27 @@ def getGuildInfo():
     for guild in data:
         obj_dict[guild] = deserialize(data[guild])
     return obj_dict
+
+def doesItExist(link, api_key, db_id):
+    url = "https://api.notion.com/v1/databases/" + db_id + "/query"
+    payload = json.dumps({
+        "filter": {
+        "property": "URL",
+        "url":{
+            "equals": link
+        }
+        }
+    })
+    headers = {
+        'Authorization': api_key,
+        'Notion-Version': '2021-05-13',
+        'Content-Type': 'application/json'
+    }
+    response = requests.post(url, headers=headers, data=payload)
+    try:
+        result = response.json()["results"]
+    except:
+        return False
+    if(len(result) == 0):
+        return False
+    return True
