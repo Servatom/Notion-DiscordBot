@@ -65,10 +65,13 @@ bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
 def reload_cogs():
     for cog in cogs:
         bot.reload_extension(cog)
-for cog in cogs:
-    bot.load_extension(cog)
+
+def load_cogs():
+    for cog in cogs:
+        bot.load_extension(cog)
 
 # TODO: Rupanshi add prefix modification command here and then remember to call reload_cogs function 
 
-
+# loading all the cogs
+load_cogs()
 bot.run(token)
