@@ -88,6 +88,8 @@ async def setup(ctx):
         )
         await ctx.send(embed=embed)
 
+    reload_cogs()
+
 
 @bot.command(name="prefix")
 async def prefix(ctx):

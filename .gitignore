@@ -129,11 +129,10 @@ dmypy.json
 .pyre/
 
 .vscode
-
 .DS_Store
 Bot/dataUploaded.txt
 Creds/
+*.json
 *.sqlite
 *.sqlite3
 *.sqlite3-journal
-*.json
