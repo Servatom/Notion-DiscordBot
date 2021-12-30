@@ -1,5 +1,7 @@
+import asyncio
 import discord
 from discord.ext import commands
+from functionality import setupBot
 import os
 from database import SessionLocal, engine
 import models
@@ -14,7 +16,7 @@ prefix_data = {}
 try:
     prefix = os.environ["PREFIX"]
 except:
-    prefix = "%"
+    prefix = "!"
 
 try:
     token = os.environ["TOKEN"]
@@ -24,12 +26,14 @@ except:
 
 prefix_data = {}
 
+
 def fillPrefix():
     global prefix_data
     prefix_data = {}
     guilds = db.query(models.Clients).all()
     for guild in guilds:
         prefix_data[str(guild.guild_id)] = guild.prefix
+
 
 def generateJson():
     # get objects from the database
@@ -40,8 +44,9 @@ def generateJson():
     for guild in guilds:
         data[str(guild.guild_id)] = guild.serialize
     # write the data to a json file
-    with open('guild_data.json', 'w') as outfile:
+    with open("guild_data.json", "w") as outfile:
         json.dump(data, outfile)
+
 
 def get_prefix(client, message):
     global prefix_data
@@ -51,26 +56,91 @@ def get_prefix(client, message):
         prefix = "*"
     return prefix
 
-generateJson() 
+
+generateJson()
 fillPrefix()
 
-cogs = [
-    'cogs.delete',
-    'cogs.search',
-    'cogs.add'
-]
+cogs = ["cogs.delete", "cogs.search", "cogs.add"]
 
 bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
+
+
+@bot.command(name="setup")
+async def setup(ctx):
+    global prefix_data
+
+    setup_data = await setupBot.setupConversation(ctx, bot)
+    if setup_data is not None:
+        guild_id = setup_data.guild_id
+        prefix = setup_data.prefix
+
+        # update prefix_data
+        prefix_data[str(guild_id)] = prefix
+
+        embed = discord.Embed(
+            description="Setup complete",
+            color=discord.Color.green(),
+        )
+        await ctx.send(embed=embed)
+    else:
+        embed = discord.Embed(
+            title="Setup failed", description="Setup failed", color=discord.Color.red()
+        )
+        await ctx.send(embed=embed)
+
+    reload_cogs()
+
+
+@bot.command(name="prefix")
+async def prefix(ctx):
+    """
+    Change the prefix of the bot
+    """
+    prefix = db.query(models.Clients).filter_by(guild_id=ctx.guild.id).first().prefix
+    embed = discord.Embed(
+        title="Enter the new prefix for your bot",
+        description="Current prefix is : " + prefix,
+    )
+    await ctx.send(embed=embed)
+    try:
+        msg = await bot.wait_for(
+            "message", check=lambda message: message.author == ctx.author, timeout=60
+        )
+    except asyncio.TimeoutError:
+        embed = discord.Embed(
+            title="Timed out",
+            description="You took too long to respond",
+            color=discord.Color.red(),
+        )
+        await ctx.send(embed=embed)
+        return
+    new_prefix = msg.content.strip()
+    db.query(models.Clients).filter_by(guild_id=ctx.guild.id).update(
+        {"prefix": new_prefix}
+    )
+    try:
+        db.commit()
+    except Exception as e:
+        print(e)
+        await ctx.send("Something went wrong, please try again!")
+        return
+    await ctx.send("Successfully updated prefix!")
+
+    # Update prefix_data and reload cogs
+    global prefix_data
+    prefix_data[str(ctx.guild.id)] = new_prefix
+    reload_cogs()
+
 
 def reload_cogs():
     for cog in cogs:
         bot.reload_extension(cog)
 
+
 def load_cogs():
     for cog in cogs:
         bot.load_extension(cog)
 
-# TODO: Rupanshi add prefix modification command here and then remember to call reload_cogs function 
 
 # loading all the cogs
 load_cogs()

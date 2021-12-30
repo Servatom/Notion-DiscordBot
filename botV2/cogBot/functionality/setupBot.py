@@ -54,7 +54,7 @@ async def setupConversation(ctx, bot):
         )
         await ctx.send(embed=embed)
         return
-    notion_api_key = msg.content
+    notion_api_key = msg.content.strip()
 
     embed = discord.Embed(description="Enter the notion database id")
     await ctx.send(embed=embed)
@@ -70,7 +70,7 @@ async def setupConversation(ctx, bot):
         )
         await ctx.send(embed=embed)
         return
-    notion_db_id = msg.content
+    notion_db_id = msg.content.strip()
 
     embed = discord.Embed(description="Do you want to enable tagging? (y/n)")
     await ctx.send(embed=embed)
@@ -86,7 +86,7 @@ async def setupConversation(ctx, bot):
         )
         await ctx.send(embed=embed)
         return
-    tag = lambda: True if msg.content.lower() == "y" else False
+    tag = lambda: True if msg.content.lower().strip() == "y" else False
 
     embed = discord.Embed(
         description="Do you want to add contributors' names to the database? (y/n)"
@@ -104,7 +104,7 @@ async def setupConversation(ctx, bot):
         )
         await ctx.send(embed=embed)
         return
-    contributor = lambda: True if msg.content.lower() == "y" else False
+    contributor = lambda: True if msg.content.lower().strip() == "y" else False
 
     # Verify the details
     verification = await verifyDetails(notion_api_key, notion_db_id, ctx)
@@ -125,19 +125,18 @@ async def setupConversation(ctx, bot):
                 color=discord.Color.green(),
             )
             await ctx.send(embed=embed)
-            return True
+            return client
 
         # If the details are correct, add them to the database
         new_client = models.Clients(
             guild_id=guild_id,
             notion_api_key=notion_api_key,
             notion_db_id=notion_db_id,
-            tag=tag,
-            contributor=contributor,
+            tag=tag(),
+            contributor=contributor(),
         )
         db.add(new_client)
         db.commit()
-        # Rupanshi's TODO: Add guild to json file
-        return True
+        return new_client
 
-    return False
+    return None
