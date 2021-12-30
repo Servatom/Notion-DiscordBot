@@ -1,39 +1,53 @@
 import asyncio
 import discord
 from discord.ext import commands
+from functionality import setupBot
 import os
 from database import SessionLocal, engine
 import models
-from utils import *
-from deleteRecord import *
-from search import searchByTitleBot
-from setupBot import setupConversation
+import json
+
+# TODO
 
 db = SessionLocal()
 models.Base.metadata.create_all(bind=engine)
 
 prefix = ""
-token = ""
-
-
-# guild data
-guild_data = {}
-
-# guild prefix_data
 prefix_data = {}
 
+try:
+    prefix = os.environ["PREFIX"]
+except:
+    prefix = "!"
 
 try:
-    prefix = str(os.environ["PREFIX"])
-except:
-    print("No prefix found, using default: *")
-    prefix = "*"
-# get token
-try:
-    token = str(os.environ["TOKEN"])
+    token = os.environ["TOKEN"]
 except:
     print("No token found, exiting...")
     exit()
+
+prefix_data = {}
+
+
+def fillPrefix():
+    global prefix_data
+    prefix_data = {}
+    guilds = db.query(models.Clients).all()
+    for guild in guilds:
+        prefix_data[str(guild.guild_id)] = guild.prefix
+
+
+def generateJson():
+    # get objects from the database
+    guilds = db.query(models.Clients).all()
+    # create a dictionary to store the data
+    data = {}
+    # loop through the guilds
+    for guild in guilds:
+        data[str(guild.guild_id)] = guild.serialize
+    # write the data to a json file
+    with open("guild_data.json", "w") as outfile:
+        json.dump(data, outfile)
 
 
 def get_prefix(client, message):
@@ -45,25 +59,26 @@ def get_prefix(client, message):
     return prefix
 
 
-def botSetup():
-    # get guild data
-    global guild_data
-    guild_data = getGuildData()
+generateJson()
+fillPrefix()
 
-    # get prefix data
-    global prefix_data
-    prefix_data = getPrefixes()
-
+cogs = ["cogs.delete", "cogs.search", "cogs.add"]
 
 bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
 
 
 @bot.command(name="setup")
 async def setup(ctx):
-    global guild_data
+    global prefix_data
 
-    setup_status = await setupConversation(ctx, bot)
-    if setup_status:
+    setup_data = await setupBot.setupConversation(ctx, bot)
+    if setup_data is not None:
+        guild_id = setup_data.guild_id
+        prefix = setup_data.prefix
+
+        # update prefix_data
+        prefix_data[str(guild_id)] = prefix
+
         embed = discord.Embed(
             description="Setup complete",
             color=discord.Color.green(),
@@ -75,61 +90,7 @@ async def setup(ctx):
         )
         await ctx.send(embed=embed)
 
-
-@bot.command("delete")
-async def delete(ctx, *args):
-    if not checkIfGuildPresent(ctx.guild.id):
-        await ctx.send("You are not registered, please run `!setup` first")
-        return
-
-    # TODO: raghavTinker paginate the search results
-
-    # check if the guild has tags enabled
-    # get guild id
-    guild_id = ctx.guild.id
-    # get guild info
-    client = guild_data[str(guild_id)]
-
-    query = getQueryForTitle(args)
-
-    if query:
-        if not client.tag:
-            # no tags enabled so search by title
-            # get the title of the message
-            await delByTitle(ctx, query, client, bot)
-        else:
-            # delete by tag
-            await delByTag(ctx, query, client, bot)
-    else:
-        # embed
-        embed = discord.Embed(
-            title="No query found",
-            description="Please enter a valid query",
-            color=discord.Color.red(),
-        )
-        await ctx.send(embed=embed)
-
-
-@bot.command("searchTitle")
-async def searchTitle(ctx, *args):
-    if not checkIfGuildPresent(ctx.guild.id):
-        await ctx.send("You are not registered, please run `!setup` first")
-        return
-    guild_id = ctx.guild.id
-    client = guild_data[str(guild_id)]
-    query = getQueryForTitle(args)
-    if query:
-        await searchByTitleBot(ctx, query, client, bot)
-    else:
-        # embed send
-        embed = discord.Embed(
-            title="Please enter a valid query",
-            description="You can search by title by typing `"
-            + client.prefix
-            + "searchTitle <query>`",
-            color=discord.Color.red(),
-        )
-        await ctx.send(embed=embed)
+    reload_cogs()
 
 
 @bot.command(name="prefix")
@@ -166,11 +127,23 @@ async def prefix(ctx):
         await ctx.send("Something went wrong, please try again!")
         return
     await ctx.send("Successfully updated prefix!")
+
+    # Update prefix_data and reload cogs
     global prefix_data
     prefix_data[str(ctx.guild.id)] = new_prefix
+    reload_cogs()
 
 
-botSetup()
-print(guild_data)
-print(prefix_data)
+def reload_cogs():
+    for cog in cogs:
+        bot.reload_extension(cog)
+
+
+def load_cogs():
+    for cog in cogs:
+        bot.load_extension(cog)
+
+
+# loading all the cogs
+load_cogs()
 bot.run(token)
