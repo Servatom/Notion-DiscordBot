@@ -11,9 +11,9 @@ class Clients(Base):
     notion_db_id = Column(String, nullable=False)
     tag = Column(Boolean, default=False)
     contributor = Column(Boolean, default=False)
-    prefix = Column(String, default="!")
+    prefix = Column(String, default="*")
 
-    def __init__(self, guild_id, notion_api_key, notion_db_id, tag, contributor, prefix="!"):
+    def __init__(self, guild_id, notion_api_key, notion_db_id, tag, contributor, prefix="*"):
         self.guild_id = guild_id
         self.notion_api_key = notion_api_key
         self.notion_db_id = notion_db_id

@@ -9,7 +9,6 @@ import json
 
 # database setup
 db = SessionLocal()
-models.Base.metadata.create_all(bind=engine)
 
 # prefix data
 prefix = ""
@@ -21,7 +20,7 @@ cogs = ["cogs.delete", "cogs.search", "cogs.add"]
 try:
     prefix = os.environ["PREFIX"]
 except:
-    prefix = "!"
+    prefix = "*"
 
 try:
     token = os.environ["TOKEN"]
@@ -99,7 +98,7 @@ async def setup(ctx):
             title="Setup failed", description="Setup failed", color=discord.Color.red()
         )
         await ctx.send(embed=embed)
-
+    generateJson()
     reload_cogs()
 
 
@@ -141,6 +140,7 @@ async def prefix(ctx):
     # Update prefix_data and reload cogs
     global prefix_data
     prefix_data[str(ctx.guild.id)] = new_prefix
+    generateJson()
     reload_cogs()
 
 
