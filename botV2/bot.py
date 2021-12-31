@@ -7,13 +7,16 @@ from database import SessionLocal, engine
 import models
 import json
 
-# TODO
-
+# database setup
 db = SessionLocal()
 models.Base.metadata.create_all(bind=engine)
 
+# prefix data
 prefix = ""
 prefix_data = {}
+
+# cogs
+cogs = ["cogs.delete", "cogs.search", "cogs.add"]
 
 try:
     prefix = os.environ["PREFIX"]
@@ -26,9 +29,7 @@ except:
     print("No token found, exiting...")
     exit()
 
-prefix_data = {}
-
-
+# get prefixes from the database
 def fillPrefix():
     global prefix_data
     prefix_data = {}
@@ -37,6 +38,7 @@ def fillPrefix():
         prefix_data[str(guild.guild_id)] = guild.prefix
 
 
+# generate json file with guild info
 def generateJson():
     # get objects from the database
     guilds = db.query(models.Clients).all()
@@ -49,7 +51,17 @@ def generateJson():
     with open("guild_data.json", "w") as outfile:
         json.dump(data, outfile)
 
+# cog loading reloading
+def reload_cogs():
+    for cog in cogs:
+        bot.reload_extension(cog)
 
+
+def load_cogs():
+    for cog in cogs:
+        bot.load_extension(cog)
+
+# get prefix of the guild that triggered bot
 def get_prefix(client, message):
     global prefix_data
     try:
@@ -62,11 +74,9 @@ def get_prefix(client, message):
 generateJson()
 fillPrefix()
 
-cogs = ["cogs.delete", "cogs.search", "cogs.add"]
-
 bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
 
-
+# setup command
 @bot.command(name="setup")
 async def setup(ctx):
     global prefix_data
@@ -132,16 +142,6 @@ async def prefix(ctx):
     global prefix_data
     prefix_data[str(ctx.guild.id)] = new_prefix
     reload_cogs()
-
-
-def reload_cogs():
-    for cog in cogs:
-        bot.reload_extension(cog)
-
-
-def load_cogs():
-    for cog in cogs:
-        bot.load_extension(cog)
 
 
 # loading all the cogs
