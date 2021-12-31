@@ -5,7 +5,6 @@ from database import SessionLocal, engine
 import models
 
 db = SessionLocal()
-models.Base.metadata.create_all(bind=engine)
 
 # TODO: Use discord component buttons to make this more user friendly
 
