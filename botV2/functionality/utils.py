@@ -134,3 +134,26 @@ def doesItExist(link, api_key, db_id):
     if(len(result) == 0):
         return False
     return True
+
+def getFileTags(args):
+    #Tag provided
+    final_tag = []
+    list_of_tags = []
+
+    #Multiple
+    for tag in args:
+        #Adding the arguments to list_of_tags
+        list_of_tags.append(tag)
+
+        for tag in list_of_tags:
+            #Splitting the arguments to get the tags
+            tag_list = tag.split(",")
+            for single_tag in tag_list:
+                if(single_tag.strip() == ""):
+                    continue
+                #Appending tag to the final_tag dict
+                final_tag.append({"name": single_tag.strip().lower()})
+    if len(final_tag) > 0:
+        return final_tag
+    else:
+        return [{"name": "misc"}]
