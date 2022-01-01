@@ -1,225 +1,149 @@
+import asyncio
 import discord
 from discord.ext import commands
+from functionality import setupBot
 import os
-from addRecord import addData, addPDF, addGenericFile
-import validators
-from duplicateCheck import doesItExist, amIThere
-from tagGiver import giveTags, getSearchTags, giveTagsFileUpload
-from search import SearchObject, searchTag
-from delete import deleteMe
-#from uploadFiles import downloadFile
-from getTitle import giveTitle
-import asyncio
+from database import SessionLocal, engine
+import models
+import json
 
+# database setup
+db = SessionLocal()
+
+# prefix data
 prefix = ""
+prefix_data = {}
+
+# cogs
+cogs = ["cogs.delete", "cogs.search", "cogs.add", "cogs.upload"]
+
 try:
-    print(os.environ['PREFIX'])
-    prefix = str(os.environ['PREFIX'])
+    prefix = os.environ["PREFIX"]
 except:
-    prefix = '!'
+    prefix = "*"
 
-bot = commands.Bot(command_prefix=prefix, help_command=None)
-bot.remove_command('help')
-
-@bot.command(name="add")
-async def add(ctx, *args):
-    async with ctx.typing():
-        author = '@' + str(ctx.author).split('#')[0]
-        print(args)
-
-        if(len(args) > 0):
-            url = args[0]
-            if(validators.url(url)):
-                embed = discord.Embed(title="Adding Data...", description="Please Wait while I upload the data", color=discord.Color.green())
-                await ctx.send(embed=embed)
-                #Its a valid link
-                if((doesItExist(url) == False) and (amIThere(url) == False)):
-                    # amIThere checks if its on Gdrive and doesItexist on notion db
-                    #The link doesnt exist in the database
-                    if(len(args) > 1):             
-                        #Add data
-                        if(".pdf" in url):
-                            gDrive_link = downloadFile(url)
-                            addPDF(gDrive_link, author, giveTitle(url), giveTags(args))
-                        else:
-                            addData(url, author, giveTags(args))
-                    else:
-                        #Tag not provided
-                        if(".pdf" in url):
-                            gDrive_link = downloadFile(url)
-                            addPDF(gDrive_link,author, giveTitle(url))
-                        else:
-                            addData(url, author)
-
-                    #Send confirmation that data was pushed
-                    embed = discord.Embed(title="Data added", description="New link added by {}".format(author), color=discord.Color.from_rgb(190, 174, 226))
-                    await ctx.send(embed=embed)
-
-                else:
-                    #the link was already in the database
-                    #Preventing duplication of data
-                    embed = discord.Embed(title="Already Added", description="This link is already in the refrences page", color=discord.Color.red())
-                    await ctx.send(embed=embed)
-            else:
-                #Invalid URL provided
-                embed = discord.Embed(title="Invalid URL provided",
-                                  description="Please check the URL you have provided", color=discord.Color.red())
-                await ctx.send(embed=embed)
-        else:
-            embed = discord.Embed(
-                title="URL not provided", description="Abe kuch to daal de!", color=discord.Color.red())
-            await ctx.send(embed=embed)
-
-
-@bot.command(name="search")
-async def search(ctx, *args):
-    """Returns all entries containing the tag specified"""
-    if (len(args) > 0):
-        #Check if the tag exists
-        query = ""
-
-        for tag in args:
-            query = query + tag.strip().lower() + ", "
-        query = query.rstrip(", ")
-
-        search_results = searchTag(getSearchTags(args))
-
-        if (len(search_results) > 0):
-            #Found a result
-            embed = discord.Embed(title="Search Results", description="Results for {}".format(query), color=discord.Color.green())
-            count = 1
-            for result in search_results:
-                #Add the result to the embed
-                embed.add_field(name=str(count)+". "+ result.title, value=result.url, inline=False)
-                count += 1
-            await ctx.send(embed=embed)
-        else:
-            #No results
-            embed = discord.Embed(title="No Results", description="No results found for {}".format(query), color=discord.Color.red())
-            await ctx.send(embed=embed)
-
-    else:
-        #No tag provided
-        embed = discord.Embed(title="Invalid Search", description="Kuch to daal de!", color=discord.Color.red())
-        await ctx.send(embed=embed)
-
-@bot.command(name="delete")
-async def delete(ctx, *args):
-    if (len(args) > 0):
-        #Check if the tag exists
-        query = ""
-
-        for tag in args:
-            query = query + tag.strip().lower() + ", "
-        query = query.rstrip(", ")
-
-        search_results = searchTag(getSearchTags(args))
-
-        if (len(search_results) > 0):
-            #Found a result
-            embed = discord.Embed(title="Type in the serial number you want to delete", description="Results for {}".format(query), color=discord.Color.green())
-            count = 1
-            for result in search_results:
-                #Add the result to the embed
-                embed.add_field(name=str(count)+". "+ result.title, value=result.url, inline=False)
-                count += 1
-            await ctx.send(embed=embed)
-
-            def check(reply_user):
-                return reply_user.author == ctx.author and reply_user.channel == ctx.channel
-            
-            # Timeout error
-            try:
-                reply = await bot.wait_for("message", check=check, timeout=60)
-            except asyncio.TimeoutError:
-                embed = discord.Embed(title="No response", description=f"Waited for 30s no response received", color=discord.Color.red())
-                await ctx.send("You have not responded for 30s so quitting!")
-                return
-            
-            # Check if the input is valid
-            try:
-                option_to_delete = int(reply.content)
-                title = search_results[option_to_delete-1].title
-                print(title)
-                deleteMe(search_results[option_to_delete-1])
-                embed = discord.Embed(title="Successful! Record deleted", description=f"{title} deleted!", color=discord.Color.green())
-                await ctx.send(embed=embed)
-            except:
-                embed = discord.Embed(title="Enter Valid input", description="This option doesn't exist", color=discord.Color.red())
-                await ctx.send(embed=embed)
-
-            
-        else:
-            #No results
-            embed = discord.Embed(title="No Results", description="No results found for {}".format(query), color=discord.Color.red())
-            await ctx.send(embed=embed)
-    else:
-        #No tag provided
-        embed = discord.Embed(title="Invalid Search", description="Kuch to daal de!", color=discord.Color.red())
-        await ctx.send(embed=embed)
-
-"""
-@bot.command(name="upload")
-async def upload(ctx, *args):
-    async with ctx.typing():
-        author = '@' + str(ctx.author).split('#')[0]
-        try:
-            url = ctx.message.attachments[0].url
-        except:
-            embed = discord.Embed(title="Please upload a file", description="Kuch to daal de!", color=discord.Color.red())
-            await ctx.send(embed=embed)
-            return
-        
-        embed = discord.Embed(title="Provide Title", description="Please give us the title of the resource you are uploading", color=discord.Color.green())
-        await ctx.send(embed=embed)
-
-        def check(reply_user):
-            return reply_user.author == ctx.author and reply_user.channel == ctx.channel
-        
-        try:
-            reply = await bot.wait_for("message", check=check, timeout=60)
-        except asyncio.TimeoutError:
-            embed = discord.Embed(title="No response", description=f"Waited for 30s no response received", color=discord.Color.red())
-            await ctx.send("You have not responded for 30s so quitting!")
-            return
-        
-        title = reply.content
-        print(title)
-        if(len(args) > 0):
-            addPDF(downloadFile(url),author, title, giveTagsFileUpload(args,url))
-        else:
-            if(".pdf" in url):
-                addPDF(downloadFile(url),author, title)
-            else:
-                addGenericFile(downloadFile(url),author, title)
-        
-    embed = discord.Embed(title="Data added", description="New link added by {}".format(author), color=discord.Color.from_rgb(190, 174, 226))
-    await ctx.send(embed=embed)
-   """ 
-
-@bot.command()
-async def help(ctx):
-    """Give commands list"""
-    commands = {f"```{prefix}add <URL> <Tag 1> <Tag2>...<TagN>```": "Add URL to database with the tags (1,2...N)",
-                f"```{prefix}search <Tag 1> <Tag2>...<TagN>```": "List of records with Tag1, Tag2...Tag N",
-                f"```{prefix}delete <Tag1> <Tag2>....<TagN>```": "To delete record having tag 1,2...N. Will give list of records. Type in the serial number of the record you want to delete",}
-
-    
-    embed = discord.Embed(title="List of commands:", description="These are the commands to use with this bot", color=discord.Color.green())
-    count = 1
-    for command in commands:
-          embed.add_field(name=str(count)+". "+ command, value=commands[command], inline=False)
-          count += 1
-    await ctx.send(embed=embed)
-
-@bot.event
-async def on_ready():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{prefix}help"))
-
-#Getting discord token and running the bot
 try:
-    print(os.environ['DISCORD_AUTH'])
-    token = str(os.environ['DISCORD_AUTH'])
-    bot.run(token)
+    token = os.environ["TOKEN"]
 except:
-    print("Invalid token")
+    print("No token found, exiting...")
+    exit()
+
+# get prefixes from the database
+def fillPrefix():
+    global prefix_data
+    prefix_data = {}
+    guilds = db.query(models.Clients).all()
+    for guild in guilds:
+        prefix_data[str(guild.guild_id)] = guild.prefix
+
+
+# generate json file with guild info
+def generateJson():
+    # get objects from the database
+    guilds = db.query(models.Clients).all()
+    # create a dictionary to store the data
+    data = {}
+    # loop through the guilds
+    for guild in guilds:
+        data[str(guild.guild_id)] = guild.serialize
+    # write the data to a json file
+    with open("guild_data.json", "w") as outfile:
+        json.dump(data, outfile)
+
+# cog loading reloading
+def reload_cogs():
+    for cog in cogs:
+        bot.reload_extension(cog)
+
+
+def load_cogs():
+    for cog in cogs:
+        bot.load_extension(cog)
+
+# get prefix of the guild that triggered bot
+def get_prefix(client, message):
+    global prefix_data
+    try:
+        prefix = prefix_data[str(message.guild.id)]
+    except:
+        prefix = "*"
+    return prefix
+
+
+generateJson()
+fillPrefix()
+
+bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
+
+# setup command
+@bot.command(name="setup")
+async def setup(ctx):
+    global prefix_data
+
+    setup_data = await setupBot.setupConversation(ctx, bot)
+    if setup_data is not None:
+        guild_id = setup_data.guild_id
+        prefix = setup_data.prefix
+
+        # update prefix_data
+        prefix_data[str(guild_id)] = prefix
+
+        embed = discord.Embed(
+            description="Setup complete",
+            color=discord.Color.green(),
+        )
+        await ctx.send(embed=embed)
+    else:
+        embed = discord.Embed(
+            title="Setup failed", description="Setup failed", color=discord.Color.red()
+        )
+        await ctx.send(embed=embed)
+    generateJson()
+    reload_cogs()
+
+
+@bot.command(name="prefix")
+async def prefix(ctx):
+    """
+    Change the prefix of the bot
+    """
+    prefix = db.query(models.Clients).filter_by(guild_id=ctx.guild.id).first().prefix
+    embed = discord.Embed(
+        title="Enter the new prefix for your bot",
+        description="Current prefix is : " + prefix,
+    )
+    await ctx.send(embed=embed)
+    try:
+        msg = await bot.wait_for(
+            "message", check=lambda message: message.author == ctx.author, timeout=60
+        )
+    except asyncio.TimeoutError:
+        embed = discord.Embed(
+            title="Timed out",
+            description="You took too long to respond",
+            color=discord.Color.red(),
+        )
+        await ctx.send(embed=embed)
+        return
+    new_prefix = msg.content.strip()
+    db.query(models.Clients).filter_by(guild_id=ctx.guild.id).update(
+        {"prefix": new_prefix}
+    )
+    try:
+        db.commit()
+    except Exception as e:
+        print(e)
+        await ctx.send("Something went wrong, please try again!")
+        return
+    await ctx.send("Successfully updated prefix!")
+
+    # Update prefix_data and reload cogs
+    global prefix_data
+    prefix_data[str(ctx.guild.id)] = new_prefix
+    generateJson()
+    reload_cogs()
+
+
+# loading all the cogs
+load_cogs()
+bot.run(token)
