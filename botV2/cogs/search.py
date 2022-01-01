@@ -13,28 +13,52 @@ class Search(commands.Cog):
     async def searchByTitleBot(self, ctx, query, client):
         # first get all the data of the database
         async with ctx.typing():
-            search_results = searchByTitle(query.strip(), client.notion_db_id, client.notion_api_key)
+            search_results = searchByTitle(
+                query.strip(), client.notion_db_id, client.notion_api_key
+            )
 
             # check if there are results
             print(len(search_results))
             if len(search_results) == 0:
                 # embeded
-                embed = discord.Embed(title="No results found", description="", color=discord.Color.red())
+                embed = discord.Embed(
+                    title="No results found", description="", color=discord.Color.red()
+                )
                 await ctx.send(embed=embed)
                 return
 
-            count = 1    
+            count = 1
 
-            embed = discord.Embed(title="Search Results", description="Results for {}".format(query), color=discord.Color.green())
+            embed = discord.Embed(
+                title="Search Results",
+                description="Results for {}".format(query),
+                color=discord.Color.green(),
+            )
             for result in search_results:
                 # make sure title and url are present
                 if result.title.strip() == "" and result.url == None:
                     continue
-                embed.add_field(name=str(count)+". "+ result.title.strip(), value=result.url, inline=False)
+                embed.add_field(
+                    name=str(count) + ". " + result.title.strip(),
+                    value=result.url,
+                    inline=False,
+                )
                 count += 1
         await ctx.send(embed=embed)
 
-    @commands.command(name='searchTitle', aliases=['title'])
+    @commands.command(name="search", aliases=["s"])
+    async def search(self, ctx, *args):
+        #  Check if tagging is enabled
+        if self.guild_data[str(ctx.guild.id)].tag:
+            # Call search by tag
+            await self.searchTag(ctx, *args)
+            return
+        else:
+            # Call search by title
+            await self.searchTitle(ctx, *args)
+            return
+
+    @commands.command(name="searchTitle", aliases=["title"])
     async def searchTitle(self, ctx, *args):
         # check if guild is setup
         if not checkIfGuildPresent(ctx.guild.id):
@@ -57,6 +81,58 @@ class Search(commands.Cog):
                 color=discord.Color.red(),
             )
             await ctx.send(embed=embed)
+
+    @commands.command(name="searchTag", aliases=["tag"])
+    async def searchTag(self, ctx, *args):
+        notion_db = self.guild_data[str(ctx.guild.id)].notion_db_id
+        if len(args) > 0:
+            # Check if tag exists
+            query = ""
+
+            for tag in args:
+                query = query + tag.strip().lower() + ", "
+            query = query.rstrip(", ")
+
+            search_results = searchTag(
+                notion_db_id=notion_db,
+                notion_api_key=self.guild_data[str(ctx.guild.id)].notion_api_key,
+                tags=getSearchTagsPayload(args),
+            )
+
+            if len(search_results) > 0:
+                # Found a result
+                embed = discord.Embed(
+                    title="Search Results",
+                    description="Results for {}".format(query),
+                    color=discord.Color.green(),
+                )
+                count = 1
+                for result in search_results:
+                    # Add the result to the embed
+                    embed.add_field(
+                        name=str(count) + ". " + result.title,
+                        value=result.url,
+                        inline=False,
+                    )
+                    count += 1
+                await ctx.send(embed=embed)
+            else:
+                # No results
+                embed = discord.Embed(
+                    title="No Results",
+                    description="No results found for {}".format(query),
+                    color=discord.Color.red(),
+                )
+                await ctx.send(embed=embed)
+        else:
+            # No tags
+            embed = discord.Embed(
+                title="No Tags",
+                description="Please enter a tag to search for",
+                color=discord.Color.red(),
+            )
+            await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Search(client))
