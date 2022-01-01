@@ -10,14 +10,11 @@ ENV PYTHONUNBUFFERED=1
 # Install pip requirements
 COPY requirements.txt .
 RUN apt-get update
-RUN apt -y install libmagic1
-RUN apt -y install wget
 RUN python -m pip install -r requirements.txt
 
 RUN mkdir /Bot
 WORKDIR /Bot
-RUN mkdir data
-RUN mkdir creds
+RUN mkdir database
 COPY ./Bot /Bot
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
