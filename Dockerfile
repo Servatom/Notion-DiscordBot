@@ -10,6 +10,8 @@ ENV PYTHONUNBUFFERED=1
 # Install pip requirements
 COPY requirements.txt .
 RUN apt-get update
+RUN apt install python-dev
+RUN apt install build-essential
 RUN python -m pip install -r requirements.txt
 
 RUN mkdir /Bot
