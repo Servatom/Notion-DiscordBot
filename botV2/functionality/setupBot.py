@@ -8,6 +8,7 @@ db = SessionLocal()
 
 # TODO: Use discord component buttons to make this more user friendly
 
+
 async def verifyDetails(notion_api_key, notion_db_id, ctx):
     url = "https://api.notion.com/v1/databases/" + notion_db_id
     headers = {
@@ -85,7 +86,10 @@ async def setupConversation(ctx, bot):
         )
         await ctx.send(embed=embed)
         return
-    tag = lambda: True if msg.content.lower().strip() == "y" else False
+    if msg.content.lower().strip() == "y":
+        tag = True
+    else:
+        tag = False
 
     embed = discord.Embed(
         description="Do you want to add contributors' names to the database? (y/n)"
@@ -103,7 +107,10 @@ async def setupConversation(ctx, bot):
         )
         await ctx.send(embed=embed)
         return
-    contributor = lambda: True if msg.content.lower().strip() == "y" else False
+    if msg.content.lower().strip() == "y":
+        contributor = True
+    else:
+        contributor = False
 
     # Verify the details
     verification = await verifyDetails(notion_api_key, notion_db_id, ctx)
@@ -115,8 +122,8 @@ async def setupConversation(ctx, bot):
         if client:
             client.notion_api_key = notion_api_key
             client.notion_db_id = notion_db_id
-            client.tag = tag()
-            client.contributor = contributor()
+            client.tag = tag
+            client.contributor = contributor
             db.commit()
             embed = discord.Embed(
                 title="Updated",
@@ -131,8 +138,8 @@ async def setupConversation(ctx, bot):
             guild_id=guild_id,
             notion_api_key=notion_api_key,
             notion_db_id=notion_db_id,
-            tag=tag(),
-            contributor=contributor(),
+            tag=tag,
+            contributor=contributor,
         )
         db.add(new_client)
         db.commit()
