@@ -150,4 +150,7 @@ async def prefix(ctx):
 
 # loading all the cogs
 load_cogs()
-bot.run(token)
+try:
+    bot.run(token)
+except Exception as e:
+    print("No token...exiting!")
