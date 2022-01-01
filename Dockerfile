@@ -23,7 +23,7 @@ COPY ./Bot /Bot
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
 RUN adduser -u 5678 --disabled-password --gecos "" appuser
 RUN chown -R appuser /Bot
-RUN chown -R appuser /Bot/data
+RUN chown -R appuser /Bot/database
 USER appuser
 
 
