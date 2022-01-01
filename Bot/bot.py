@@ -10,6 +10,8 @@ import json
 # database setup
 db = SessionLocal()
 
+models.Base.metadata.create_all(bind=engine)
+
 # prefix data
 prefix = ""
 prefix_data = {}
@@ -50,6 +52,7 @@ def generateJson():
     with open("guild_data.json", "w") as outfile:
         json.dump(data, outfile)
 
+
 # cog loading reloading
 def reload_cogs():
     for cog in cogs:
@@ -59,6 +62,7 @@ def reload_cogs():
 def load_cogs():
     for cog in cogs:
         bot.load_extension(cog)
+
 
 # get prefix of the guild that triggered bot
 def get_prefix(client, message):
