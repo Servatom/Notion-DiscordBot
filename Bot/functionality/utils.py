@@ -87,6 +87,10 @@ def getSearchTagsPayload(tags):
                 )
     return final_tag
 
+def getResults(url, payload, headers):
+    response = requests.post(url, headers=headers, data=payload)
+    results = response.json()
+    return results
 
 def searchTag(notion_db_id, notion_api_key, tags):
     # Search for a tag
@@ -97,9 +101,9 @@ def searchTag(notion_db_id, notion_api_key, tags):
         "Notion-Version": "2021-05-13",
         "Content-Type": "application/json",
     }
-    response = requests.post(url, headers=headers, data=payload)
 
-    query_results = response.json()["results"]
+    data = getResults(url, payload, headers)
+    query_results = data["results"]
     no_of_results = len(query_results)
 
     search_results = []
@@ -110,10 +114,27 @@ def searchTag(notion_db_id, notion_api_key, tags):
         # Create Search Object for each result
         search_object = SearchData(
             id=result["id"],
-            url=result["properties"]["URL"]["url"],
-            title=result["properties"]["Title"]["rich_text"][0]["plain_text"],
+            url=result["properties"]["URL"]["url"].strip(),
+            title=result["properties"]["Title"]["rich_text"][0]["plain_text"].strip(),
         )
         search_results.append(search_object)
+    
+    while data["next_cursor"]:
+        # pagination
+        payload = json.dumps({"filter": {"and": tags}, "cursor": data["next_cursor"]})
+        data = getResults(url, payload, headers)
+        query_results = data["results"]
+        no_of_results = len(query_results)
+        if no_of_results == 0:
+            return search_results
+        for result in query_results:
+            # Create Search Object for each result
+            search_object = SearchData(
+                id=result["id"],
+                url=result["properties"]["URL"]["url"].strip(),
+                title=result["properties"]["Title"]["rich_text"][0]["plain_text"].strip(),
+            )
+            search_results.append(search_object)
     return search_results
 
 
@@ -131,11 +152,6 @@ def getPrefixes():
     for guild in guilds:
         prefixes[str(guild.guild_id)] = guild.prefix
     return prefixes
-
-
-# testing purposes only
-# for obj in searchByTitle("django", "9e449365893e4657a5502f4723771ece", "secret_D50ybSSLDed6mTFOy188nHShw2XWPh2v1FFiUAviMfG"):
-#  print(obj.title)
 
 
 def checkIfGuildPresent(guildId):

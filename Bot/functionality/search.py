@@ -4,7 +4,15 @@ import requests
 from bs4 import BeautifulSoup
 from functionality.utils import *
 
+def getTitles(headers, payload, url):
+    # send payload to get results
+    payload = json.dumps(payload)
+    response = requests.post(url, headers=headers, data=payload)
+    data = json.loads(response.text)
+    return data
+
 def getAllTitles(notion_db, notion_api):
+    # manage payload and see across all pages
     url = "https://api.notion.com/v1/databases/" + notion_db + "/query"
     headers = {
         'Authorization': notion_api,
@@ -13,16 +21,14 @@ def getAllTitles(notion_db, notion_api):
     }
 
     payload = {
-    "filter":{
-        "property": "Title",
-        "text": {
-            "contains": ""
+        "filter":{
+            "property": "Title",
+            "text": {
+                "contains": ""
+            }
         }
     }
-    }   
-    payload = json.dumps(payload)
-    response = requests.post(url, headers=headers, data=payload)
-    data = json.loads(response.text)
+    data = getTitles(headers, payload, url)
     objects = {}
     for row in data['results']:
         try:
@@ -31,6 +37,25 @@ def getAllTitles(notion_db, notion_api):
             objects[title] = obj
         except:
             pass
+    while data["next_cursor"]:
+        # means there is another page
+        payload = {
+            "filter":{
+                "property": "Title",
+                "text": {
+                    "contains": ""
+                }
+            },
+            "start_cursor": data["next_cursor"]
+        }
+        data = getTitles(headers, payload, url)
+        for row in data['results']:
+            try:
+                title = row["properties"]["Title"]["rich_text"][0]["text"]["content"]
+                obj = SearchData(row["id"], title, row["properties"]["URL"]["url"])
+                objects[title] = obj
+            except:
+                pass
     return objects
 
 
