@@ -191,7 +191,6 @@ def getGuildInfo():
     # read guild_data.json
     with open("guild_data.json", "r") as f:
         data = json.load(f)
-    print(data)
 
     obj_dict = {}
     for guild in data:

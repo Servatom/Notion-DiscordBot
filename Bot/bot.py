@@ -17,7 +17,7 @@ prefix = ""
 prefix_data = {}
 
 # cogs
-cogs = ["cogs.delete", "cogs.search", "cogs.add", "cogs.upload"]
+cogs = ["cogs.delete", "cogs.search", "cogs.add", "cogs.upload", "cogs.help"]
 
 try:
     prefix = os.environ["PREFIX"]
