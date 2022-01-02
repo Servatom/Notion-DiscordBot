@@ -10,7 +10,7 @@ services:
 before_script: pip install docker-compose
 
 script:
-  - docker-compose run -e TOKEN=$TOKEN --rm notiondiscordbot sh -c "python bot.py"
+  - docker-compose run --rm notiondiscordbot sh -c "python bot.py"
 
 after_success:
   # Log in to docker CLI
