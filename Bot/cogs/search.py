@@ -1,8 +1,14 @@
+import os
 import discord
 import asyncio
 from discord.ext import commands
 from functionality.utils import *
 from functionality.search import *
+
+try:
+    PREFIX = os.environ["PREFIX"]
+except:
+    PREFIX = "*"
 
 
 class Search(commands.Cog):
@@ -51,8 +57,8 @@ class Search(commands.Cog):
         if not checkIfGuildPresent(ctx.guild.id):
             # embed send
             embed = discord.Embed(
-                title="You are not registered, please run `!setup` first",
-                description="",
+                description="You are not registered, please run `" + PREFIX + "setup` first",
+                title="",
                 color=discord.Color.red(),
             )
             await ctx.send(embed=embed)
@@ -76,8 +82,8 @@ class Search(commands.Cog):
         if not checkIfGuildPresent(ctx.guild.id):
             # embed send
             embed = discord.Embed(
-                title="You are not registered, please run `!setup` first",
-                description="",
+                description="You are not registered, please run `" + PREFIX + "setup` first",
+                title="",
                 color=discord.Color.red(),
             )
             await ctx.send(embed=embed)

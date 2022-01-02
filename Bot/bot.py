@@ -1,7 +1,7 @@
 import asyncio
 import discord
 from discord.ext import commands
-from functionality import setupBot
+from functionality import setupBot, utils
 import os
 from database import SessionLocal, engine
 import models
@@ -107,10 +107,19 @@ async def setup(ctx):
 
 
 @bot.command(name="prefix")
-async def prefix(ctx):
+async def changePrefix(ctx):
     """
     Change the prefix of the bot
     """
+    global prefix
+    if not utils.checkIfGuildPresent(ctx.guild.id):
+            embed = discord.Embed(
+                description="You are not registered, please run `" + prefix + "setup` first",
+                title="",
+                color=discord.Color.red(),
+            )
+            await ctx.send(embed=embed)
+            return
     prefix = db.query(models.Clients).filter_by(guild_id=ctx.guild.id).first().prefix
     embed = discord.Embed(
         title="Enter the new prefix for your bot",
@@ -139,7 +148,12 @@ async def prefix(ctx):
         print(e)
         await ctx.send("Something went wrong, please try again!")
         return
-    await ctx.send("Successfully updated prefix!")
+    embed = discord.Embed(
+        title="Successfully updated prefix",
+        description="Prefix changed to " + new_prefix,
+        color=discord.Color.green(),
+    )
+    await ctx.send(embed=embed)
 
     # Update prefix_data and reload cogs
     global prefix_data
