@@ -1,23 +1,37 @@
+import os
 import discord
 from discord.ext import commands
 from functionality.utils import *
 from functionality.addRecord import *
 import asyncio
 
+try:
+    PREFIX = os.environ["PREFIX"]
+except:
+    PREFIX = "*"
+
+
 class Add(commands.Cog):
     def __init__(self, client):
         self.bot = client
         self.guild_data = getGuildInfo()
 
-    @commands.command(name='add', aliases=['a'])
+    @commands.command(name="add", aliases=["a"])
     async def add(self, ctx, *args):
         if not checkIfGuildPresent(ctx.guild.id):
-            await ctx.send("You are not registered, please run `!setup` first")
+            embed = discord.Embed(
+                description="You are not registered, please run `"
+                + PREFIX
+                + "setup` first",
+                title="",
+                color=discord.Color.red(),
+            )
+            await ctx.send(embed=embed)
             return
         # check if the guild has tags enabled
         # get guild id
         guild_id = ctx.guild.id
-        # get guild info 
+        # get guild info
         client = self.guild_data[str(guild_id)]
 
         # check if args are empty
@@ -32,8 +46,8 @@ class Add(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
-        
-        # get url 
+
+        # get url
         url = args[0]
         # check if url is valid
         with ctx.channel.typing():
@@ -71,10 +85,14 @@ class Add(commands.Cog):
                     # ask for title from user
                     # start conversation
                     await ctx.send("Please enter a valid title")
+
                     def check(m):
                         return m.author == ctx.author and m.channel == ctx.channel
+
                     try:
-                        msg = await self.bot.wait_for('message', check=check, timeout=60)
+                        msg = await self.bot.wait_for(
+                            "message", check=check, timeout=60
+                        )
                     except asyncio.TimeoutError:
                         await ctx.send("Timed out")
                         return
@@ -92,16 +110,31 @@ class Add(commands.Cog):
                     if client.tag and client.contributor:
                         # addData
                         tags = getTags(args)
-                        author = '@' + str(ctx.author).split('#')[0]
-                        addAllData(url, client.notion_api_key, client.notion_db_id, author, tags, title)
+                        author = "@" + str(ctx.author).split("#")[0]
+                        addAllData(
+                            url,
+                            client.notion_api_key,
+                            client.notion_db_id,
+                            author,
+                            tags,
+                            title,
+                        )
                     elif client.tag == False and client.contributor == True:
                         # addData
-                        author = '@' + str(ctx.author).split('#')[0]
-                        addDataWithoutTag(url, client.notion_api_key, client.notion_db_id, title, author)
+                        author = "@" + str(ctx.author).split("#")[0]
+                        addDataWithoutTag(
+                            url,
+                            client.notion_api_key,
+                            client.notion_db_id,
+                            title,
+                            author,
+                        )
                     elif client.tag == True and client.contributor == False:
                         # addData
                         tags = getTags(args)
-                        addWithoutContributor(url, client.notion_api_key, client.notion_db_id, tags, title)
+                        addWithoutContributor(
+                            url, client.notion_api_key, client.notion_db_id, tags, title
+                        )
                         # send success message
                     # embed
                     embed = discord.Embed(
@@ -112,13 +145,22 @@ class Add(commands.Cog):
                     await ctx.send(embed=embed)
                 except Exception as e:
                     print(e)
-                    #embed
+                    # embed
                     embed = discord.Embed(
                         title="Error",
                         description="Error adding record. Check notion database id and api key provided",
                         color=discord.Color.red(),
                     )
                     await ctx.send(embed=embed)
+            else:
+                # embed
+                embed = discord.Embed(
+                    title="Invalid URL",
+                    description="Please enter a valid URL",
+                    color=discord.Color.red(),
+                )
+                await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Add(client))
