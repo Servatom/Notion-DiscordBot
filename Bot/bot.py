@@ -89,8 +89,6 @@ async def setup(ctx):
             title="Setup failed", description="Setup failed", color=discord.Color.red()
         )
         await ctx.send(embed=embed)
-    generateJson()
-    reload_cogs()
 
 
 @bot.command(name="prefix")
@@ -148,7 +146,6 @@ async def changePrefix(ctx):
     
     # update guild_info
     bot.guild_info[str(ctx.guild.id)] = db.query(models.Clients).filter_by(guild_id=ctx.guild.id).first()
-    reload_cogs()
 
 
 # storing guild info in an attribute of bot so that all cogs can access
