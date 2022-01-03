@@ -11,7 +11,7 @@ except:
 class Help(commands.Cog):
     def __init__(self, client):
         self.bot = client
-        self.guild_data = getGuildInfo()
+        self.guild_data = self.bot.guild_info
 
     @commands.command(name="help", aliases=["h"])
     async def help(self, ctx, *args):

@@ -14,7 +14,8 @@ except:
 class Add(commands.Cog):
     def __init__(self, client):
         self.bot = client
-        self.guild_data = getGuildInfo()
+        self.guild_data = self.bot.guild_info
+        print(self.guild_data)
 
     @commands.command(name="add", aliases=["a"])
     async def add(self, ctx, *args):

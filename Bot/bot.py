@@ -6,7 +6,7 @@ import os
 from database import SessionLocal, engine
 import models
 import json
-
+import functionality.utils as utils
 # database setup
 db = SessionLocal()
 
@@ -39,20 +39,6 @@ def fillPrefix():
         prefix_data[str(guild.guild_id)] = guild.prefix
 
 
-# generate json file with guild info
-def generateJson():
-    # get objects from the database
-    guilds = db.query(models.Clients).all()
-    # create a dictionary to store the data
-    data = {}
-    # loop through the guilds
-    for guild in guilds:
-        data[str(guild.guild_id)] = guild.serialize
-    # write the data to a json file
-    with open("guild_data.json", "w") as outfile:
-        json.dump(data, outfile)
-
-
 # cog loading reloading
 def reload_cogs():
     for cog in cogs:
@@ -73,8 +59,6 @@ def get_prefix(client, message):
         prefix = "*"
     return prefix
 
-
-generateJson()
 fillPrefix()
 
 bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
@@ -91,6 +75,9 @@ async def setup(ctx):
 
         # update prefix_data
         prefix_data[str(guild_id)] = prefix
+
+        # update guild_info
+        bot.guild_info[str(guild_id)] = setup_data
 
         embed = discord.Embed(
             description="Setup complete",
@@ -158,10 +145,14 @@ async def changePrefix(ctx):
     # Update prefix_data and reload cogs
     global prefix_data
     prefix_data[str(ctx.guild.id)] = new_prefix
-    generateJson()
+    
+    # update guild_info
+    bot.guild_info[str(ctx.guild.id)] = db.query(models.Clients).filter_by(guild_id=ctx.guild.id).first()
     reload_cogs()
 
 
+# storing guild info in an attribute of bot so that all cogs can access
+bot.guild_info = utils.getGuildInfo()
 # loading all the cogs
 load_cogs()
 try:
