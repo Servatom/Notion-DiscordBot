@@ -14,7 +14,7 @@ except:
 class Upload(commands.Cog):
     def __init__(self, client):
         self.bot = client
-        self.guild_data = getGuildInfo()
+        self.guild_data = self.bot.guild_info
 
     @commands.command(name="upload", aliases=["u"])
     async def upload(self, ctx, *args):

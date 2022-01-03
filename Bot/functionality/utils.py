@@ -189,13 +189,12 @@ def deserialize(data):
 
 def getGuildInfo():
     # read guild_data.json
-    with open("guild_data.json", "r") as f:
-        data = json.load(f)
+    guilds = db.query(models.Clients).all()
+    data = {}
+    for guild in guilds:
+        data[str(guild.guild_id)] = guild
+    return data
 
-    obj_dict = {}
-    for guild in data:
-        obj_dict[guild] = deserialize(data[guild])
-    return obj_dict
 
 
 def doesItExist(link, api_key, db_id):

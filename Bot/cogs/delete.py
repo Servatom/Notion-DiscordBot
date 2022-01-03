@@ -188,8 +188,7 @@ async def delByTag(ctx, query, client, bot, args):
 class Delete(commands.Cog):
     def __init__(self, client):
         self.bot = client
-        self.guild_data = getGuildInfo()
-        print("reload")
+        self.guild_data = self.bot.guild_info
 
     @commands.command(name="delete", aliases=["del"])
     async def delete(self, ctx, *args):

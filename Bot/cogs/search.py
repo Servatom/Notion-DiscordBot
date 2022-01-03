@@ -14,7 +14,7 @@ except:
 class Search(commands.Cog):
     def __init__(self, client):
         self.bot = client
-        self.guild_data = getGuildInfo()
+        self.guild_data = self.bot.guild_info
 
     async def searchByTitleBot(self, ctx, query, client):
         # first get all the data of the database
