@@ -3,7 +3,7 @@ import discord
 import requests
 from database import SessionLocal, engine
 import models
-
+from functionality.security import *
 db = SessionLocal()
 
 # TODO: Use discord component buttons to make this more user friendly
@@ -120,8 +120,8 @@ async def setupConversation(ctx, bot):
             db.query(models.Clients).filter(models.Clients.guild_id == guild_id).first()
         )
         if client:
-            client.notion_api_key = notion_api_key
-            client.notion_db_id = notion_db_id
+            client.notion_api_key = encrypt(notion_api_key)
+            client.notion_db_id = encrypt(notion_db_id)
             client.tag = tag
             client.contributor = contributor
             db.commit()
@@ -131,18 +131,35 @@ async def setupConversation(ctx, bot):
                 color=discord.Color.green(),
             )
             await ctx.send(embed=embed)
-            return client
+
+            # create obj
+            obj = models.Clients(
+                guild_id=guild_id,
+                notion_api_key=notion_api_key,
+                notion_db_id=notion_db_id,
+                tag=tag,
+                contributor=contributor
+            )
+            return obj
 
         # If the details are correct, add them to the database
         new_client = models.Clients(
             guild_id=guild_id,
+            notion_api_key=encrypt(notion_api_key),
+            notion_db_id=encrypt(notion_db_id),
+            tag=tag,
+            contributor=contributor
+        )
+
+        obj = models.Clients(
+            guild_id=guild_id,
             notion_api_key=notion_api_key,
             notion_db_id=notion_db_id,
             tag=tag,
-            contributor=contributor,
+            contributor=contributor
         )
         db.add(new_client)
         db.commit()
-        return new_client
+        return obj
 
     return None

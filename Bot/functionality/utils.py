@@ -4,7 +4,7 @@ from database import SessionLocal, engine
 import models
 import json
 import validators
-
+from functionality.security import *
 db = SessionLocal()
 
 
@@ -185,17 +185,46 @@ def deserialize(data):
         data["prefix"],
     )
     return obj
+def fixDatabase():
+    # update database
+    guilds = db.query(models.Clients).all()
+    data = {}
+    for guild in guilds:
+        # encrypt api key and db key
+        guild.notion_api_key = encrypt(guild.notion_api_key)
+        guild.notion_db_id = encrypt(guild.notion_db_id)
+        data[str(guild.guild_id)] = guild
+        # update
+        db.commit()
+    return data
 
 
 def getGuildInfo():
     # read guild_data.json
     guilds = db.query(models.Clients).all()
+    # check if the records are encrypted
     data = {}
     for guild in guilds:
-        data[str(guild.guild_id)] = guild
+        if getKey(guild.notion_db_id) and getKey(guild.notion_api_key):
+            # all good
+            obj = models.Clients(
+                guild.guild_id,
+                getKey(guild.notion_api_key),
+                getKey(guild.notion_db_id),
+                guild.tag,
+                guild.contributor,
+                guild.prefix
+            )
+            print(obj.notion_api_key)
+            print(obj.notion_db_id)
+            data[str(guild.guild_id)] = obj
+        else:
+            # database rescue 
+            print("Database not encrypt! Start encryption")
+            data = fixDatabase()
+            print("Database fixed")
+    print(data)
     return data
-
-
 
 def doesItExist(link, api_key, db_id):
     url = "https://api.notion.com/v1/databases/" + db_id + "/query"
