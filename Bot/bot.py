@@ -7,6 +7,7 @@ from database import SessionLocal, engine
 import models
 import json
 import functionality.utils as utils
+import functionality.security as security
 # database setup
 db = SessionLocal()
 
@@ -145,8 +146,7 @@ async def changePrefix(ctx):
     prefix_data[str(ctx.guild.id)] = new_prefix
     
     # update guild_info
-    bot.guild_info[str(ctx.guild.id)] = db.query(models.Clients).filter_by(guild_id=ctx.guild.id).first()
-
+    bot.guild_info[str(ctx.guild.id)].prefix = new_prefix
 
 # storing guild info in an attribute of bot so that all cogs can access
 bot.guild_info = utils.getGuildInfo()

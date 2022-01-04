@@ -2,6 +2,7 @@ import os
 import discord
 import asyncio
 from discord.ext import commands
+from discord.ext.commands.core import guild_only
 from functionality.utils import *
 from functionality.search import *
 
@@ -15,9 +16,10 @@ class Search(commands.Cog):
     def __init__(self, client):
         self.bot = client
         self.guild_data = self.bot.guild_info
-
+        print(self.guild_data)
     async def searchByTitleBot(self, ctx, query, client):
         # first get all the data of the database
+
         search_results = searchByTitle(
             query.strip(), client.notion_db_id, client.notion_api_key
         )
