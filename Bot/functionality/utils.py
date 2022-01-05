@@ -190,10 +190,10 @@ def fixDatabase():
     guilds = db.query(models.Clients).all()
     data = {}
     for guild in guilds:
+        data[str(guild.guild_id)] = guild
         # encrypt api key and db key
         guild.notion_api_key = encrypt(guild.notion_api_key)
         guild.notion_db_id = encrypt(guild.notion_db_id)
-        data[str(guild.guild_id)] = guild
         # update
         db.commit()
     return data
