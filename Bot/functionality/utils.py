@@ -221,8 +221,9 @@ def getGuildInfo():
         else:
             # database rescue 
             print("Database not encrypt! Start encryption")
-            data = fixDatabase()
             print("Database fixed")
+            return getGuildInfo()
+            
     print(data)
     return data
 
