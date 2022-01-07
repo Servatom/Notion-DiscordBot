@@ -4,6 +4,7 @@ import requests
 from database import SessionLocal, engine
 import models
 from functionality.security import *
+
 db = SessionLocal()
 
 # TODO: Use discord component buttons to make this more user friendly
@@ -91,27 +92,6 @@ async def setupConversation(ctx, bot):
     else:
         tag = False
 
-    embed = discord.Embed(
-        description="Do you want to add contributors' names to the database? (y/n)"
-    )
-    await ctx.send(embed=embed)
-    try:
-        msg = await bot.wait_for(
-            "message", check=lambda message: message.author == ctx.author, timeout=60
-        )
-    except asyncio.TimeoutError:
-        embed = discord.Embed(
-            title="Timed out",
-            description="You took too long to respond",
-            color=discord.Color.red(),
-        )
-        await ctx.send(embed=embed)
-        return
-    if msg.content.lower().strip() == "y":
-        contributor = True
-    else:
-        contributor = False
-
     # Verify the details
     verification = await verifyDetails(notion_api_key, notion_db_id, ctx)
     if verification:
@@ -123,7 +103,6 @@ async def setupConversation(ctx, bot):
             client.notion_api_key = encrypt(notion_api_key)
             client.notion_db_id = encrypt(notion_db_id)
             client.tag = tag
-            client.contributor = contributor
             db.commit()
             embed = discord.Embed(
                 title="Updated",
@@ -138,7 +117,6 @@ async def setupConversation(ctx, bot):
                 notion_api_key=notion_api_key,
                 notion_db_id=notion_db_id,
                 tag=tag,
-                contributor=contributor
             )
             return obj
 
@@ -148,7 +126,6 @@ async def setupConversation(ctx, bot):
             notion_api_key=encrypt(notion_api_key),
             notion_db_id=encrypt(notion_db_id),
             tag=tag,
-            contributor=contributor
         )
 
         obj = models.Clients(
@@ -156,7 +133,6 @@ async def setupConversation(ctx, bot):
             notion_api_key=notion_api_key,
             notion_db_id=notion_db_id,
             tag=tag,
-            contributor=contributor
         )
         db.add(new_client)
         db.commit()
