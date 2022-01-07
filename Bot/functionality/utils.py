@@ -181,10 +181,10 @@ def deserialize(data):
         data["notion_api_key"],
         data["notion_db_id"],
         data["tag"],
-        data["contributor"],
         data["prefix"],
     )
     return obj
+
 def fixDatabase():
     # update database
     guilds = db.query(models.Clients).all()
@@ -212,7 +212,6 @@ def getGuildInfo():
                 getKey(guild.notion_api_key),
                 getKey(guild.notion_db_id),
                 guild.tag,
-                guild.contributor,
                 guild.prefix
             )
             print(obj.notion_api_key)

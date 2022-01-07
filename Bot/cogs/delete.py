@@ -67,23 +67,13 @@ async def delByTitle(ctx, query, client, bot):
         title = search_results[option_to_delete - 1].title
 
         # check if contribuor turned on
-        if client.contributor and not client.tag:
-            # enabled contributor
-            deleteWithoutTag(
-                search_results[option_to_delete - 1], client.notion_api_key
-            )
-            # await ctx.send("Deleted without tag")
-        elif client.tag and client.contributor:
+        if client.tag:
             deleteAll(search_results[option_to_delete - 1], client.notion_api_key)
             # await ctx.send("Deleted all")
-        elif not client.contributor and client.tag:
-            deleteWithoutContributor(
-                search_results[option_to_delete - 1], client.notion_api_key
-            )
             # await ctx.send("Deleted with tag")
         else:
             # disabled contributor
-            deleteWithoutTagAndContributor(
+            deleteWithoutTag(
                 search_results[option_to_delete - 1], client.notion_api_key
             )
             # await ctx.send("Deleted without tag and contributor")
@@ -161,14 +151,7 @@ async def delByTag(ctx, query, client, bot, args):
         title = search_results[option_to_delete - 1].title
 
         # since tags are enabled delete with or without contributor
-        if client.contributor:
-            # tag and contribuor both enabled
-            deleteAll(search_results[option_to_delete - 1], client.notion_api_key)
-        else:
-            # tag enabled only
-            deleteWithoutContributor(
-                search_results[option_to_delete - 1], client.notion_api_key
-            )
+        deleteAll(search_results[option_to_delete - 1], client.notion_api_key)
         embed = discord.Embed(
             title="Successful! Record deleted",
             description=f"{title} deleted!",

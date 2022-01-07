@@ -17,39 +17,6 @@ def getTitle(url):
     except:
         return None
 
-
-def addDataWithoutTagContributor(url, notion_api_key, notion_db_id, title):
-    data_to_be_written = {
-        "parent": {
-            "database_id": notion_db_id
-        },
-        "properties": {
-            "Title": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": title,
-                        },
-                        "annotations": {
-                            "bold": True,
-                            "italic": False,
-                            "strikethrough": False,
-                            "underline": False,
-                            "code": False,
-                        }
-                    },
-
-                ]
-            },
-            "URL": {
-                "url": url
-            }
-        }
-    }
-    payload = json.dumps(data_to_be_written)
-    sendData(payload, notion_api_key)
-
-
 def addAllData(url, notion_api_key, notion_db_id, contributor, tag, title):
     data_to_be_written = {
         "parent": {
@@ -88,40 +55,6 @@ def addAllData(url, notion_api_key, notion_db_id, contributor, tag, title):
                         },
                     }
                 ]
-            }
-        }
-    }
-    payload = json.dumps(data_to_be_written)
-    sendData(payload, notion_api_key)
-
-def addWithoutContributor(url, notion_api_key, notion_db_id, tag, title):
-    data_to_be_written = {
-        "parent": {
-            "database_id": notion_db_id
-        },
-        "properties": {
-            "Tag": {
-                "multi_select": tag
-            },
-            "Title": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": title,
-                        },
-                        "annotations": {
-                            "bold": True,
-                            "italic": False,
-                            "strikethrough": False,
-                            "underline": False,
-                            "code": False,
-                        }
-                    },
-
-                ]
-            },
-            "URL": {
-                "url": url
             }
         }
     }

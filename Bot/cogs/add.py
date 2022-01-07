@@ -107,7 +107,7 @@ class Add(commands.Cog):
 
                 # add data
                 try:
-                    if client.tag and client.contributor:
+                    if client.tag:
                         # addData
                         tags = getTags(args)
                         author = "@" + str(ctx.author).split("#")[0]
@@ -119,7 +119,7 @@ class Add(commands.Cog):
                             tags,
                             title,
                         )
-                    elif client.tag == False and client.contributor == True:
+                    else:
                         # addData
                         author = "@" + str(ctx.author).split("#")[0]
                         addDataWithoutTag(
@@ -129,13 +129,7 @@ class Add(commands.Cog):
                             title,
                             author,
                         )
-                    elif client.tag == True and client.contributor == False:
-                        # addData
-                        tags = getTags(args)
-                        addWithoutContributor(
-                            url, client.notion_api_key, client.notion_db_id, tags, title
-                        )
-                        # send success message
+                    # send success message
                     # embed
                     embed = discord.Embed(
                         title="Success",
