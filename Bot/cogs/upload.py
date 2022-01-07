@@ -66,24 +66,18 @@ class Upload(commands.Cog):
         client = self.guild_data[str(ctx.guild.id)]
         # add data
         try:
-            if client.tag and client.contributor:
+            if client.tag:
                 # addData
                 tags = getFileTags(args)
                 author = "@" + str(ctx.author).split("#")[0]
                 addAllData(
                     url, client.notion_api_key, client.notion_db_id, author, tags, title
                 )
-            elif client.tag == False and client.contributor == True:
+            else:
                 # addData
                 author = "@" + str(ctx.author).split("#")[0]
                 addDataWithoutTag(
                     url, client.notion_api_key, client.notion_db_id, title, author
-                )
-            elif client.tag == True and client.contributor == False:
-                # addData
-                tags = getFileTags(args)
-                addWithoutContributor(
-                    url, client.notion_api_key, client.notion_db_id, tags, title
                 )
             # send success message
             # embed
