@@ -27,7 +27,7 @@
 
 2. Then in Notion create a table like this (Tag being optional field):
 
-<img src="https://assets.servatom.com/Notion-DiscordBot/TableHeader%20.png">
+<img src="https://assets.servatom.com/Notion-DiscordBot/TableHeader.png">
 
 4 columns where:
 - Contributor is of property type Title
