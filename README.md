@@ -129,3 +129,4 @@ To change the bot prefix, type `*prefix`, `*` being the deault prefix.
 <img src="https://assets.servatom.com/Notion-DiscordBot/prefix.jpeg" width="60%"><br>
 
 <hr><br>
+
