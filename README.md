@@ -25,7 +25,7 @@
 1. Go to Notion and create a new [Integration](https://www.notion.so/my-integrations).
   Note the internal Integration.
 
-2. Then in Notion create a table like this (Tag being optional field):
+2. Then in Notion create in a new page create a table like this (Tag being optional field):
 
 <img src="https://assets.servatom.com/Notion-DiscordBot/TableHeader.png">
 
