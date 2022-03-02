@@ -130,3 +130,17 @@ To change the bot prefix, type `*prefix`, `*` being the deault prefix.
 
 <hr><br>
 
+<p>
+  :mortar_board: <i>All maintainers in this project are under-graduate students in the <a href="https://csed.thapar.edu">Department of
+Computer Science and Engineering, TIET</a> <b>@</b> <a href="https://www.thapar.edu/">Thapar University</a></i> <br> <br>
+ 
+
+  :boy: <b>Raghav Sharma</b> <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Email: <a>raghav.sharma17@outlook.com</a> <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GitHub: <a href="https://github.com/raghavTinker">@raghavTinker</a> <br>
+  
+  :woman: <b>Rupanshi Jain</b> <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Email: <a>jainrupanshi@outlook.com</a> <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GitHub: <a href="https://github.com/rdotjain">@rdotjain</a> <br>
+  
+  Special thanks to <a href="https://github.com/animesh-007/">Animesh Gupta </a> for giving us better ideas to make this project better and for spreading the word.
