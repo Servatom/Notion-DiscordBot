@@ -3,6 +3,8 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.sql.expression import null
 from sqlalchemy.sql.sqltypes import Boolean
 from database import Base
+from sqlalchemy.sql.sqltypes import BigInteger
+
 
 try:
     PREFIX = os.environ["PREFIX"]
@@ -12,7 +14,7 @@ except:
 class Clients(Base):
     __tablename__ = 'clients'
     id = Column(Integer, primary_key=True, index=True)
-    guild_id = Column(Integer, index=True, nullable=False)
+    guild_id = Column(BigInteger, index=True, nullable=False)
     notion_api_key = Column(String, nullable=False)
     notion_db_id = Column(String, nullable=False)
     tag = Column(Boolean, default=False)

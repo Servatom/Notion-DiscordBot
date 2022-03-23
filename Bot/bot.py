@@ -10,9 +10,6 @@ import functionality.utils as utils
 import functionality.security as security
 # database setup
 db = SessionLocal()
-
-models.Base.metadata.create_all(bind=engine)
-
 # prefix data
 prefix = ""
 prefix_data = {}
