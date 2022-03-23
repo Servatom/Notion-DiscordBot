@@ -25,3 +25,4 @@ yarl==1.7.2
 zipp==3.7.0
 python-jose==3.3.0
 passlib==1.7.4
+psycopg2-binary==2.8.5
