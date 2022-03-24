@@ -1,3 +1,4 @@
+import requests
 import asyncio
 import discord
 from discord.ext import commands
@@ -10,6 +11,9 @@ import functionality.utils as utils
 import functionality.security as security
 # database setup
 db = SessionLocal()
+
+models.Base.metadata.create_all(bind=engine)
+
 # prefix data
 prefix = ""
 prefix_data = {}
@@ -149,6 +153,31 @@ async def changePrefix(ctx):
 bot.guild_info = utils.getGuildInfo()
 # loading all the cogs
 load_cogs()
+
+@bot.event
+async def on_guild_join(guild):
+    try:
+        url = "http://34.131.200.215:3234/add/notion"
+        guild_name = guild.name
+        payload = json.dumps({
+                "guild_id": guild.id,
+                "guild_name": guild_name
+        })
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        response = requests.request("POST", url, headers=headers, data=payload)
+    except:
+        print("Could not send to server")
+    
+    # send a message to run *setup
+    embed = discord.Embed(
+        title = "Hi! I am NotionBot",
+        description = "To get started, please run `" + prefix + "setup`. Also please check out [README.md](https://github.com/Servatom/Notion-DiscordBot/blob/main/README.md) for further instructions.",
+        color = discord.Color.green()
+    )
+    await guild.system_channel.send(embed=embed)
+
 try:
     bot.run(token)
 except Exception as e:
