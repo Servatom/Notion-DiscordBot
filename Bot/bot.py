@@ -178,6 +178,17 @@ async def on_guild_join(guild):
     )
     await guild.system_channel.send(embed=embed)
 
+@bot.command(name="number")
+async def number(ctx):
+    # get number of clients
+    number = db.query(models.Clients).count()
+    embed = discord.Embed(
+        title="Number of clients",
+        description=str(number),
+        color=discord.Color.green(),
+    )
+    await ctx.send(embed=embed)
+    
 try:
     bot.run(token)
 except Exception as e:
