@@ -11,5 +11,5 @@ services:
     environment:
       - TOKEN=your-discord-bot-token
       - PREFIX=*
-      - SECRET_KEY=<encryption key>
+      - SECRET_KEY=MTAxMjQ3NzM1MjMwMDc3NzUxMg.GQ4iGf.X2RHjvr7pq22MJBurAodCKZTyuwWNRcenlnJTA
     restart: always
